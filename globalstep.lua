@@ -37,33 +37,54 @@ minetest.register_globalstep(function(dtime)
 	local visited_count = storage:get_int("visited_count")
 	local start = minetest.get_us_time()
 
-	visited_count = visited_count + 1
-
-	local chunk_pos = {
-		x = chunk_x,
-		y = chunk_y,
-		z = chunk_z
-	}
-
-	local generated = mapcleaner.is_generated(chunk_pos)
-	if generated then
-		generated_count = generated_count + 1
-		if has_monitoring_mod then
-			generated_count_metric.inc(1)
-		end
-		local protected = mapcleaner.is_chunk_protected(chunk_pos)
-		if protected then
-			protected_count = protected_count + 1
-			if has_monitoring_mod then
-				protected_count_metric.inc(1)
-			end
+	local function increment_pos()
+		if chunk_z >= 400 then
+			-- reset pos
+			chunk_x = -400
+			chunk_y = -400
+			chunk_z = -400
+		elseif chunk_y > 400 then
+			chunk_y = -400
+			chunk_z = chunk_z + 1
+		elseif chunk_x > 400 then
+			chunk_x = -400
+			chunk_y = chunk_y + 1
 		else
-			delete_count = delete_count + 1
-			mapcleaner.delete_chunk(chunk_pos)
+			chunk_x = chunk_x + 1
+		end
+	end
+
+	while (minetest.get_us_time() - start) < 10000 do
+		visited_count = visited_count + 1
+
+		local chunk_pos = {
+			x = chunk_x,
+			y = chunk_y,
+			z = chunk_z
+		}
+
+		local generated = mapcleaner.is_generated(chunk_pos)
+		if generated then
+			generated_count = generated_count + 1
 			if has_monitoring_mod then
-				delete_count_metric.inc(1)
+				generated_count_metric.inc(1)
+			end
+			local protected = mapcleaner.is_chunk_protected(chunk_pos)
+			if protected then
+				protected_count = protected_count + 1
+				if has_monitoring_mod then
+					protected_count_metric.inc(1)
+				end
+			else
+				delete_count = delete_count + 1
+				mapcleaner.delete_chunk(chunk_pos)
+				if has_monitoring_mod then
+					delete_count_metric.inc(1)
+				end
 			end
 		end
+
+		increment_pos()
 	end
 
 	local millis = minetest.get_us_time() - start
@@ -82,21 +103,6 @@ minetest.register_globalstep(function(dtime)
 	storage:set_int("protected_count", protected_count)
 	storage:set_int("delete_count", delete_count)
 	storage:set_int("visited_count", visited_count)
-
-	if chunk_z >= 400 then
-		-- reset pos
-		chunk_x = -400
-		chunk_y = -400
-		chunk_z = -400
-	elseif chunk_y > 400 then
-		chunk_y = -400
-		chunk_z = chunk_z + 1
-	elseif chunk_x > 400 then
-		chunk_x = -400
-		chunk_y = chunk_y + 1
-	else
-		chunk_x = chunk_x + 1
-	end
 
 	storage:set_string("chunk_x", chunk_x)
 	storage:set_string("chunk_y", chunk_y)

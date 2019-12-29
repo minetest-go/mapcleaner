@@ -84,19 +84,22 @@ minetest.register_globalstep(function(dtime)
 			end
 		end
 
+		if has_monitoring_mod then
+			delete_count_total_metric.set(delete_count)
+			visited_count_metric.inc(1)
+			visited_count_total_metric.set(visited_count)
+			chunk_x_metric.set(chunk_x)
+			chunk_y_metric.set(chunk_y)
+			chunk_z_metric.set(chunk_z)
+		end
+
 		increment_pos()
 	end
 
 	local millis = minetest.get_us_time() - start
 
 	if has_monitoring_mod then
-		delete_count_total_metric.set(delete_count)
-		visited_count_metric.inc(1)
-		visited_count_total_metric.set(visited_count)
 		cpu_time_metric.inc(millis)
-		chunk_x_metric.set(chunk_x)
-		chunk_y_metric.set(chunk_y)
-		chunk_z_metric.set(chunk_z)
 	end
 
 	storage:set_int("generated_count", generated_count)

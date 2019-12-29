@@ -23,42 +23,22 @@ minetest.register_chatcommand("mapcleaner_check", {
 	end
 })
 
+local storage = mapcleaner.storage
 
-minetest.register_chatcommand("mapcleaner_iter", {
-	privs = { server = true },
+minetest.register_chatcommand("mapcleaner_status", {
 	func = function(name)
-		local generated_count = 0
-		local protected_count = 0
-		local delete_count = 0
-		local count = 0
-		local start = minetest.get_us_time()
-
-		for x=-2, 2 do
-			for y=-2, 2 do
-				for z=-2, 2 do
-					count = count + 1
-					local chunk_pos = {x=x, y=y, z=z}
-					local generated = mapcleaner.is_generated(chunk_pos)
-					if generated then
-						generated_count = generated_count + 1
-						local protected = mapcleaner.is_chunk_protected(chunk_pos)
-						if protected then
-							protected_count = protected_count + 1
-						else
-							delete_count = delete_count + 1
-							mapcleaner.delete_chunk(chunk_pos)
-						end
-					end
-				end
-			end
-		end
-
-		local millis = minetest.get_us_time() - start
+		local chunk_x = storage:get_int("chunk_x")
+		local chunk_y = storage:get_int("chunk_y")
+		local chunk_z = storage:get_int("chunk_z")
+		local generated_count = storage:get_int("generated_count")
+		local protected_count = storage:get_int("protected_count")
+		local delete_count = storage:get_int("delete_count")
+		local visited_count = storage:get_int("visited_count")
 
 		return true, "Generated: " .. generated_count ..
 			" Protected: " .. protected_count ..
 			" Deleted: " .. delete_count ..
-			" Count: " .. count ..
-			" Millis: " .. millis
+			" Count: " .. visited_count ..
+			" current chunk: " .. chunk_x .. "/" .. chunk_y .. "/" .. chunk_z
 	end
 })

@@ -1,28 +1,3 @@
-minetest.register_chatcommand("mapcleaner_check", {
-	description = "checks the current chunk",
-	privs = { server = true },
-	func = function(name)
-		local player = minetest.get_player_by_name(name)
-		if not player then
-			return true, "no such player: " .. name
-		end
-
-		local pos = player:get_pos()
-		local mapblock = mapcleaner.get_mapblock_from_pos(pos)
-		local chunk = mapcleaner.get_chunkpos_from_pos(pos)
-		local protected = mapcleaner.is_mapblock_protected(mapblock)
-		local protected_str = "false"
-		if protected then
-			protected_str = "true"
-		end
-
-		return true, "Mapblock: " .. minetest.pos_to_string(mapblock) ..
-			" Chunk: " .. minetest.pos_to_string(chunk) ..
-			" Protected: " .. protected_str
-
-	end
-})
-
 local storage = mapcleaner.storage
 
 minetest.register_chatcommand("mapcleaner_status", {

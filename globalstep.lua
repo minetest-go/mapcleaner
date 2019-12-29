@@ -26,6 +26,9 @@ minetest.register_globalstep(function(dtime)
 	end
 
 	timer = 0
+	if mapcleaner.get_max_lag() > 0.5 then
+		return
+	end
 
 	local chunk_x = tonumber(storage:get("chunk_x") or "-388")
 	local chunk_y = tonumber(storage:get("chunk_y") or "-388")

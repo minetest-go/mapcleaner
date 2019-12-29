@@ -2,7 +2,7 @@ unused_args = false
 allow_defined_top = true
 
 globals = {
-	"mapserver"
+	"mapcleaner"
 }
 
 read_globals = {
@@ -15,10 +15,6 @@ read_globals = {
 	"vector", "ItemStack",
 	"dump",
 
-	-- Deps
-	"unified_inventory", "default", "advtrains",
-	"minecart", locator = { fields = { "beacons" } },
-
 	-- optional mods
-	"xban", "monitoring"
+	"monitoring", "areas"
 }

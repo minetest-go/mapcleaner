@@ -26,7 +26,7 @@ minetest.register_globalstep(function(dtime)
 	end
 
 	timer = 0
-	if mapcleaner.get_max_lag() > 0.5 then
+	if mapcleaner.get_max_lag() > 0.7 then
 		return
 	end
 
@@ -57,7 +57,7 @@ minetest.register_globalstep(function(dtime)
 		end
 	end
 
-	while (minetest.get_us_time() - start) < 10000 do
+	while (minetest.get_us_time() - start) < 50000 do
 		visited_count = visited_count + 1
 
 		local chunk_pos = {

@@ -41,6 +41,17 @@ local function get_blocks_from_mapblock(mapblock)
 	return min, max
 end
 
+local function is_mapblock_protected(mapblock_pos)
+	local min, max = get_blocks_from_mapblock(mapblock_pos)
+
+	local nodes = minetest.find_nodes_in_area(min, max, {
+		"protector:protect",
+		"protector:protect2"
+	})
+
+	return nodes and #nodes > 0
+end
+
 minetest.register_chatcommand("mapcleaner_check", {
 	description = "checks the current chunk",
 	privs = { server = true },
@@ -53,8 +64,15 @@ minetest.register_chatcommand("mapcleaner_check", {
 		local pos = player:get_pos()
 		local mapblock = get_mapblock_from_pos(pos)
 		local chunk = get_chunkpos_from_pos(pos)
+		local protected = is_mapblock_protected(mapblock)
+		local protected_str = "false"
+		if protected then
+			protected_str = "true"
+		end
 
-		return true, "Mapblock: " .. minetest.pos_to_string(mapblock) .. " Chunk: " .. minetest.pos_to_string(chunk)
+		return true, "Mapblock: " .. minetest.pos_to_string(mapblock) ..
+			" Chunk: " .. minetest.pos_to_string(chunk) ..
+			" Protected: " .. protected_str
 
 	end
 })

@@ -26,7 +26,7 @@ minetest.register_globalstep(function(dtime)
 	end
 
 	timer = 0
-	if mapcleaner.get_max_lag() > 0.7 then
+	if mapcleaner.get_max_lag() > 1.5 then
 		return
 	end
 

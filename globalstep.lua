@@ -27,9 +27,9 @@ minetest.register_globalstep(function(dtime)
 
 	timer = 0
 
-	local chunk_x = tonumber(storage:get("chunk_x") or "-400")
-	local chunk_y = tonumber(storage:get("chunk_y") or "-400")
-	local chunk_z = tonumber(storage:get("chunk_z") or "-400")
+	local chunk_x = tonumber(storage:get("chunk_x") or "-388")
+	local chunk_y = tonumber(storage:get("chunk_y") or "-388")
+	local chunk_z = tonumber(storage:get("chunk_z") or "-388")
 
 	local generated_count = storage:get_int("generated_count")
 	local protected_count = storage:get_int("protected_count")

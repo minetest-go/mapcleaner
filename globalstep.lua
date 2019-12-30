@@ -41,17 +41,17 @@ minetest.register_globalstep(function(dtime)
 	local start = minetest.get_us_time()
 
 	local function increment_pos()
-		if chunk_z >= 400 then
+		if chunk_y >= 400 then
 			-- reset pos
 			chunk_x = -400
 			chunk_y = -400
 			chunk_z = -400
-		elseif chunk_y > 400 then
-			chunk_y = -400
-			chunk_z = chunk_z + 1
+		elseif chunk_z > 400 then
+			chunk_z = -400
+			chunk_y = chunk_y + 1
 		elseif chunk_x > 400 then
 			chunk_x = -400
-			chunk_y = chunk_y + 1
+			chunk_z = chunk_z + 1
 		else
 			chunk_x = chunk_x + 1
 		end

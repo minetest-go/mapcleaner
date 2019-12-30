@@ -17,3 +17,31 @@ minetest.register_chatcommand("mapcleaner_status", {
 			" current chunk: " .. chunk_x .. "/" .. chunk_y .. "/" .. chunk_z
 	end
 })
+
+minetest.register_chatcommand("mapcleaner_max_time", {
+	description = "sets the max time usage in microseconds",
+	privs = { server = true },
+	func = function(name, params)
+		local value = tonumber(params)
+		if value then
+			mapcleaner.max_time_usage = value
+			return true, "New value: " .. value
+		else
+			return true, "Value: " .. mapcleaner.max_time_usage
+		end
+	end
+})
+
+minetest.register_chatcommand("mapcleaner_step_interval", {
+	description = "sets the step_interval in seconds",
+	privs = { server = true },
+	func = function(name, params)
+		local value = tonumber(params)
+		if value then
+			mapcleaner.step_interval = value
+			return true, "New value: " .. value
+		else
+			return true, "Value: " .. mapcleaner.step_interval
+		end
+	end
+})

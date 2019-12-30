@@ -1,5 +1,13 @@
 mapcleaner = {
-	storage = minetest.get_mod_storage()
+	storage = minetest.get_mod_storage(),
+
+	-- step interval
+	step_interval = 1.0,
+
+	max_lag = 1.5,
+
+	-- time usage per step
+	max_time_usage = 50000
 }
 
 local MP = minetest.get_modpath("mapcleaner")

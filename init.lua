@@ -1,13 +1,18 @@
+local storage = minetest.get_mod_storage()
+
 mapcleaner = {
-	storage = minetest.get_mod_storage(),
+	storage = storage,
 
 	-- step interval
-	step_interval = 1.0,
+	step_interval = tonumber(storage:get("step_interval") or "1.0"),
 
-	max_lag = 1.5,
+	-- above that lag the process is stopped
+	max_lag = tonumber(storage:get("max_lag") or "1.5"),
 
 	-- time usage per step
-	max_time_usage = 50000
+	max_time_usage = tonumber(storage:get("max_time_usage") or "50000"),
+
+	run = (storage:get("run") or "0") == 1
 }
 
 local MP = minetest.get_modpath("mapcleaner")

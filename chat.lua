@@ -25,7 +25,9 @@ minetest.register_chatcommand("mapcleaner_max_time", {
 		local value = tonumber(params)
 		if value then
 			mapcleaner.max_time_usage = value
+			storage:set_string("max_time_usage", value)
 			return true, "New value: " .. value
+
 		else
 			return true, "Value: " .. mapcleaner.max_time_usage
 		end
@@ -39,9 +41,33 @@ minetest.register_chatcommand("mapcleaner_step_interval", {
 		local value = tonumber(params)
 		if value then
 			mapcleaner.step_interval = value
+			storage:set_string("step_interval", value)
 			return true, "New value: " .. value
+
 		else
 			return true, "Value: " .. mapcleaner.step_interval
+		end
+	end
+})
+
+minetest.register_chatcommand("mapcleaner_run", {
+	description = "sets or gets the run state",
+	privs = { server = true },
+	func = function(name, params)
+		if params == "true" then
+			mapcleaner.run = true
+			storage:set_string("run", "1")
+
+		elseif params == "false" then
+			mapcleaner.run = false
+			storage:set_string("run", "0")
+
+		end
+
+		if mapcleaner.run then
+			return true, "mapcleaner running!"
+		else
+			return true, "mapcleaner stopped"
 		end
 	end
 })

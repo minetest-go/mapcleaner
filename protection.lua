@@ -18,7 +18,7 @@ function mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)
 		for y=chunk_pos.y-1,chunk_pos.y+1 do
 			for z=chunk_pos.z-1,chunk_pos.z+1 do
 				local current_chunk = {x=x, y=y, z=z}
-				if mapcleaner.is_generated(current_chunk) and mapcleaner.is_chunk_protected(current_chunk) then
+				if mapcleaner.is_chunk_protected(current_chunk) then
 					return true
 				end
 			end
@@ -32,6 +32,10 @@ function mapcleaner.is_chunk_protected(chunk_pos)
 	local hash = minetest.hash_node_position(chunk_pos)
 	if cache[hash] then
 		return true
+	end
+
+	if not mapcleaner.is_generated(chunk_pos) then
+		return false
 	end
 
 	local min_mapblock_pos, max_mapblock_pos = mapcleaner.get_mapblocks_from_chunk(chunk_pos)

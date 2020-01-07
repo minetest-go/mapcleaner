@@ -2,6 +2,17 @@ local has_areas_mod = minetest.get_modpath("areas")
 
 local cache = {}
 
+-- list of protected nodes
+local protected_nodes = {
+	"protector:protect",
+	"protector:protect2",
+	"travelnet:travelnet",
+	"xp_redo:protector",
+	"priv_protector:protector",
+	"default:chest_protected",
+	"bones:bones"
+}
+
 function mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)
 	for x=chunk_pos.x-1,chunk_pos.x+1 do
 		for y=chunk_pos.y-1,chunk_pos.y+1 do
@@ -58,10 +69,7 @@ function mapcleaner.is_mapblock_protected(mapblock_pos)
 	-- load area
 	minetest.get_voxel_manip(min, max)
 
-	local nodes = minetest.find_nodes_in_area(min, max, {
-		"protector:protect",
-		"protector:protect2"
-	})
+	local nodes = minetest.find_nodes_in_area(min, max, protected_nodes)
 
 	return nodes and #nodes > 0
 end

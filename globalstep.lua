@@ -72,7 +72,7 @@ minetest.register_globalstep(function(dtime)
 			if has_monitoring_mod then
 				generated_count_metric.inc(1)
 			end
-			local protected = mapcleaner.is_chunk_protected(chunk_pos)
+			local protected = mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)
 			if protected then
 				protected_count = protected_count + 1
 				if has_monitoring_mod then

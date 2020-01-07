@@ -1,5 +1,12 @@
+
+mapcleaner.generated_cache = {}
+
 -- returns true if the chunk is generated
 function mapcleaner.is_generated(chunk_pos)
+	local hash = minetest.hash_node_position(chunk_pos)
+	if mapcleaner.generated_cache[hash] then
+		return true
+	end
 
 	local min_mapblock_pos, max_mapblock_pos = mapcleaner.get_mapblocks_from_chunk(chunk_pos)
 	local min_pos = mapcleaner.get_blocks_from_mapblock(min_mapblock_pos)
@@ -30,6 +37,9 @@ function mapcleaner.is_generated(chunk_pos)
 		-- clean up afterwards
 		-- looks like the above calls create "ignore" only mapblocks on the database
 		minetest.delete_area(check_pos, check_pos)
+	else
+		-- set flag in cache
+		mapcleaner.generated_cache[hash] = true
 	end
 
 	return is_generated

@@ -1,5 +1,10 @@
 function mapcleaner.delete_chunk(chunk_pos)
 	minetest.log("warning", "[mapcleaner] removing chunk: " .. minetest.pos_to_string(chunk_pos))
+
+	-- clear generated cache flag
+	local hash = minetest.hash_node_position(chunk_pos)
+	mapcleaner.generated_cache[hash] = nil
+
 	local min_mapblock_pos, max_mapblock_pos = mapcleaner.get_mapblocks_from_chunk(chunk_pos)
 
 	for x=min_mapblock_pos.x,max_mapblock_pos.x do

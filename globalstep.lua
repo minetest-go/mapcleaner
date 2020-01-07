@@ -71,12 +71,15 @@ minetest.register_globalstep(function(dtime)
 			break
 		end
 
+		-- check if chunk is generated
 		local generated = mapcleaner.is_generated(chunk_pos)
 		if generated then
 			generated_count = generated_count + 1
 			if has_monitoring_mod then
 				generated_count_metric.inc(1)
 			end
+
+			-- check if there are protections in the chunk or the neighbours
 			local protected = mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)
 			if protected then
 				protected_count = protected_count + 1
@@ -85,6 +88,8 @@ minetest.register_globalstep(function(dtime)
 				end
 			else
 				delete_count = delete_count + 1
+
+				-- remove entire chunk
 				mapcleaner.delete_chunk(chunk_pos)
 				if has_monitoring_mod then
 					delete_count_metric.inc(1)

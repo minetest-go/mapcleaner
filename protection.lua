@@ -1,5 +1,7 @@
 local has_areas_mod = minetest.get_modpath("areas")
 
+local cache = {}
+
 function mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)
 	for x=chunk_pos.x-1,chunk_pos.x+1 do
 		for y=chunk_pos.y-1,chunk_pos.y+1 do
@@ -16,12 +18,18 @@ function mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)
 end
 
 function mapcleaner.is_chunk_protected(chunk_pos)
+	local hash = minetest.hash_node_position(chunk_pos)
+	if cache[hash] then
+		return true
+	end
+
 	local min_mapblock_pos, max_mapblock_pos = mapcleaner.get_mapblocks_from_chunk(chunk_pos)
 
 	for x=min_mapblock_pos.x,max_mapblock_pos.x do
 		for y=min_mapblock_pos.y,max_mapblock_pos.y do
 			for z=min_mapblock_pos.z,max_mapblock_pos.z do
 				if mapcleaner.is_mapblock_protected({x=x, y=y, z=z}) then
+					cache[hash] = true
 					return true
 				end
 			end

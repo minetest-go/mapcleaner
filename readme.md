@@ -9,6 +9,14 @@ A mod for [minetest](http://www.minetest.net)
 
 Removes unprotected map chunks on an online server
 
+# Rationale
+
+TODO
+
+# Process
+
+TODO
+
 # Protected nodes
 
 List of protected nodes:
@@ -27,6 +35,10 @@ bones:bones
 
 * Player distance: 5*80 blocks
 * For a chunk to be removed all surrounding chunks have to be unprotected
+
+# Settings
+
+TODO
 
 # License
 

@@ -66,6 +66,11 @@ minetest.register_globalstep(function(dtime)
 			z = chunk_z
 		}
 
+		if mapcleaner.is_player_near_chunk(chunk_pos) then
+			-- take a break
+			break
+		end
+
 		local generated = mapcleaner.is_generated(chunk_pos)
 		if generated then
 			generated_count = generated_count + 1

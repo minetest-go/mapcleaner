@@ -14,6 +14,7 @@ local MP = minetest.get_modpath("mapcleaner")
 
 dofile(MP .. "/functions.lua")
 dofile(MP .. "/protection.lua")
+dofile(MP .. "/presence.lua")
 dofile(MP .. "/generated.lua")
 dofile(MP .. "/max_lag.lua")
 dofile(MP .. "/delete.lua")

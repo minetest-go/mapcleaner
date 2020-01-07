@@ -12,6 +12,7 @@ mapcleaner = {
 	-- time usage per step
 	max_time_usage = tonumber(storage:get("max_time_usage") or "50000"),
 
+	-- run state
 	run = (storage:get("run") or "0") == 1
 }
 

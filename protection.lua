@@ -18,7 +18,7 @@ function mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)
 		for y=chunk_pos.y-1,chunk_pos.y+1 do
 			for z=chunk_pos.z-1,chunk_pos.z+1 do
 				local current_chunk = {x=x, y=y, z=z}
-				if mapcleaner.is_chunk_protected(current_chunk) then
+				if mapcleaner.is_generated(current_chunk) and mapcleaner.is_chunk_protected(current_chunk) then
 					return true
 				end
 			end

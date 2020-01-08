@@ -13,7 +13,7 @@ mapcleaner = {
 	max_time_usage = tonumber(storage:get("max_time_usage") or "50000"),
 
 	-- run state
-	run = (storage:get("run") or "0") == 1
+	run = (storage:get("run") or "0") == "1"
 }
 
 local MP = minetest.get_modpath("mapcleaner")

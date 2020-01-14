@@ -29,6 +29,9 @@ xp_redo:protector
 priv_protector:protector
 default:chest_protected
 bones:bones
+advtrains:dtrack_st
+advtrains:dtrack_st_45
+advtrains:dtrack_cr_60
 ```
 
 # Safety range

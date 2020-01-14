@@ -4,13 +4,27 @@ local cache = {}
 
 -- list of protected nodes
 local protected_nodes = {
+	-- default protector
 	"protector:protect",
 	"protector:protect2",
+
+	-- travelnet
 	"travelnet:travelnet",
+
+	-- xp protector
 	"xp_redo:protector",
+
+	-- priv protector
 	"priv_protector:protector",
+
+	-- default
 	"default:chest_protected",
-	"bones:bones"
+	"bones:bones",
+
+	-- advtrains nodes
+	"advtrains:dtrack_st",
+	"advtrains:dtrack_st_45",
+	"advtrains:dtrack_cr_60"
 }
 
 function mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)

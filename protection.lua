@@ -24,7 +24,8 @@ local protected_nodes = {
 	-- advtrains nodes
 	"advtrains:dtrack_st",
 	"advtrains:dtrack_st_45",
-	"advtrains:dtrack_cr_60"
+	"advtrains:dtrack_cr_60",
+	"group:save_in_at_nodedb" -- just in case...
 }
 
 function mapcleaner.is_chunk_or_neighbours_protected(chunk_pos)

@@ -32,6 +32,7 @@ bones:bones
 advtrains:dtrack_st
 advtrains:dtrack_st_45
 advtrains:dtrack_cr_60
+group:save_in_at_nodedb
 ```
 
 # Safety range

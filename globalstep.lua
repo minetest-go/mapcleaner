@@ -94,6 +94,10 @@ minetest.register_globalstep(function(dtime)
 				mapcleaner.delete_chunk(chunk_pos)
 				if has_monitoring_mod then
 					delete_count_metric.inc(1)
+					if type(monitoring.increment_total_mapblocks) == "function" then
+						-- decrement global counter
+						monitoring.increment_total_mapblocks(-125)
+					end
 				end
 			end
 		end

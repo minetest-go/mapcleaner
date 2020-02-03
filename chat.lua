@@ -34,6 +34,22 @@ minetest.register_chatcommand("mapcleaner_max_time", {
 	end
 })
 
+minetest.register_chatcommand("mapcleaner_max_lag", {
+	description = "sets the max lag value in seconds",
+	privs = { server = true },
+	func = function(name, params)
+		local value = tonumber(params)
+		if value then
+			mapcleaner.max_lag = value
+			storage:set_string("max_lag", value)
+			return true, "New value: " .. value
+
+		else
+			return true, "Value: " .. mapcleaner.max_lag
+		end
+	end
+})
+
 minetest.register_chatcommand("mapcleaner_step_interval", {
 	description = "sets the step_interval in seconds",
 	privs = { server = true },

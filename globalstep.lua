@@ -68,7 +68,8 @@ minetest.register_globalstep(function(dtime)
 		}
 
 		if mapcleaner.is_player_near_chunk(chunk_pos) then
-			-- take a break
+			-- skip chunk and take a break
+			increment_pos()
 			break
 		end
 

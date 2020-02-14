@@ -7,7 +7,7 @@ function mapcleaner.is_player_near_chunk(chunk_pos)
     local ppos = player:get_pos()
     local distance = vector.distance(min_pos, ppos)
 
-    if distance < (80 * 5) then
+    if distance < (80 * 3) then
       return true
     end
   end

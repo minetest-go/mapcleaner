@@ -21,6 +21,10 @@ local protected_nodes = {
 	"default:chest_protected",
 	"bones:bones",
 
+	-- various
+	"moreblocks:slab_desert_cobble",
+	"technic:slab_marble",
+
 	-- advtrains nodes
 	"advtrains:dtrack_st",
 	"advtrains:dtrack_st_45",

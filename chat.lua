@@ -1,5 +1,32 @@
 local storage = mapcleaner.storage
 
+
+-- shows a waypoint for given seconds
+local function show_waypoint(playername, pos, name, seconds)
+	local player = minetest.get_player_by_name(playername)
+	if not player then
+		return
+	end
+
+	local id = player:hud_add({
+		hud_elem_type = "waypoint",
+		name = name,
+		text = "m",
+		number = 0xFF0000,
+		world_pos = pos
+	})
+
+	minetest.after(seconds, function()
+		player = minetest.get_player_by_name(playername)
+		if not player then
+			return
+		end
+
+		player:hud_remove(id)
+	end)
+end
+
+
 minetest.register_chatcommand("mapcleaner_status", {
 	func = function(name)
 		local chunk_x = storage:get_int("chunk_x")
@@ -9,6 +36,14 @@ minetest.register_chatcommand("mapcleaner_status", {
 		local protected_count = storage:get_int("protected_count")
 		local delete_count = storage:get_int("delete_count")
 		local visited_count = storage:get_int("visited_count")
+
+		-- calculate node position
+		local pos = {
+			x = (chunk_x * 80) + 40,
+			y = (chunk_y * 80) + 40,
+			z = (chunk_z * 80) + 40
+		}
+		show_waypoint(name, pos, "Mapcleaner", 10)
 
 		return true, "Generated: " .. generated_count ..
 			" Protected: " .. protected_count ..

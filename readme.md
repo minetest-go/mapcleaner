@@ -11,7 +11,7 @@ Removes unprotected map chunks on an online server
 
 # Rationale
 
-Cleaning up unused an stale mapgen only blocks
+Cleaning up unused and stale mapgen only blocks
 
 # Process
 
@@ -46,7 +46,7 @@ group:save_in_at_nodedb
 * **/mapcleaner_max_time [microseconds]** shows or sets the max cpu-time per step
 * **/mapcleaner_step_interval [seconds]** shows or sets the seconds between intervals
 * **/mapcleaner_run [true|false]** show, start or stop the process
-* **mapcleaner_max_lag [seconds]** sets the max lag value where the mapcleaner stops running
+* **/mapcleaner_max_lag [seconds]** sets the max lag value where the mapcleaner stops running
 
 All settings are persisted across restarts
 

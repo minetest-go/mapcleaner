@@ -1,5 +1,5 @@
 
-local journal_path = "mapgen_journal"
+local journal_path = minetest.get_worldpath() .. "/mapgen_journal"
 
 minetest.mkdir(journal_path)
 

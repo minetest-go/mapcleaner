@@ -14,6 +14,17 @@ minetest.register_on_generated(function(minp, maxp)
 			minp = minp,
 			maxp = maxp
 		}
+
+		for _, player in ipairs(minetest.get_connected_players()) do
+	    local ppos = player:get_pos()
+	    local distance = vector.distance(vector.add(minp, 40), ppos)
+			if distance < 200 then
+				-- add nearest playername to journal
+				data.playername = player:get_player_name()
+				break
+			end
+		end
+
 		file:write(minetest.serialize(data) .. "\n")
 		io.close(file)
 	end

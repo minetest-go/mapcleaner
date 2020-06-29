@@ -10,7 +10,11 @@ minetest.register_on_generated(function(minp, maxp)
 
 	local file = io.open(filename, "a+")
 	if file then
-		file:write(minetest.pos_to_string(minp) .. "_" .. minetest.pos_to_string(maxp) .. "\n")
+		local data = {
+			minp = minp,
+			maxp = maxp
+		}
+		file:write(minetest.serialize(data) .. "\n")
 		io.close(file)
 	end
 end)

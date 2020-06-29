@@ -3,7 +3,8 @@ mapcleaner
 
 A mod for [minetest](http://www.minetest.net)
 
-![](https://github.com/thomasrudin-mt/mapcleaner/workflows/luacheck/badge.svg)
+![](https://github.com/BuckarooBanzay/mapcleaner/workflows/luacheck/badge.svg)
+![](https://github.com/BuckarooBanzay/mapcleaner/workflows/integration-test/badge.svg)
 
 # Overview
 

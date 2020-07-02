@@ -1,6 +1,6 @@
 const zlib = require("zlib");
 
-module.exports.parse = function(data){
+module.exports.parse = data => new Promise(function(resolve, reject) {
 	const buffer = Buffer.from(data);
 
 	let offset = 0;
@@ -9,7 +9,7 @@ module.exports.parse = function(data){
 	const version = buffer.readUInt8(offset);
 
 	if (version < 25 || version > 28) {
-		throw new Error("mapblock version not supported: " + version);
+		return reject("mapblock version not supported: " + version);
 	}
 
 	if (version >= 27) {
@@ -25,7 +25,7 @@ module.exports.parse = function(data){
 	const params_width = buffer.readUInt8(offset+1);
 
 	if (content_width != 2 || params_width != 2){
-		throw new Error("content/param width mismatch!")
+		return reject("content/param width mismatch!")
 	}
 
 	//mapdata (blocks)
@@ -36,20 +36,73 @@ module.exports.parse = function(data){
 		offset = 4;
 	}
 
-	const metadata_buffer = buffer.subarray(offset);
+	const mapdata_buffer = buffer.subarray(offset);
 
-	const inflate = zlib.createInflate();
-	inflate.on("data", function(e){
-		console.log("event", e);
+	let inflate = zlib.createInflate();
+	inflate.on("data", function(mapdata){
+		console.log("mapdata", mapdata);
 		console.log(inflate.bytesWritten);
+
+		offset += inflate.bytesWritten;
+		const metadata_buffer = buffer.subarray(offset);
+		inflate = zlib.createInflate();
+
+		inflate.on("data", function(metadata){
+			console.log("metadata", metadata);
+			console.log(inflate.bytesWritten);
+			offset += inflate.bytesWritten;
+
+			//static objects version
+			const static_objects_version = buffer.readUInt8(offset);
+			offset++;
+
+			const static_objects_count = buffer.readUInt16BE(offset);
+			offset += 2;
+
+			for (let i=0; i < static_objects_count; i++) {
+				offset += 13;
+				const dataSize = buffer.readUInt16BE(offset);
+				console.log("dataSize", dataSize);
+				offset += dataSize + 2;
+			}
+
+			//timestamp
+			offset += 4;
+
+			//mapping version
+			offset++;
+
+			const numMappings = buffer.readUInt16BE(offset);
+			console.log("numMappings", numMappings);
+
+			const node_names = [];
+
+			offset += 2;
+			for (let i=0; i < numMappings; i++) {
+				//const nodeId = buffer.readUInt16BE(offset);
+				offset += 2;
+
+				const nameLen = buffer.readUInt16BE(offset);
+				offset += 2;
+
+				const blockName = buffer.subarray(offset, offset+nameLen).toString();
+				offset += nameLen
+
+				console.log("blockName", blockName);
+				node_names.push(blockName);
+			}
+
+			resolve({
+				version: version,
+				static_objects_count: static_objects_count,
+				static_objects_version: static_objects_version,
+				node_names: node_names
+			});
+		});
+
+		inflate.write(metadata_buffer);
 	});
-	inflate.write(metadata_buffer);
 
-	console.log(inflate);
+	inflate.write(mapdata_buffer);
 
-	const metadata = zlib.inflateSync(metadata_buffer);
-
-	return {
-		version: version
-	};
-};
+});

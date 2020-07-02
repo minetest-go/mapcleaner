@@ -67,11 +67,11 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 			offset++;
 
 			const numMappings = buffer.readUInt16BE(offset);
-			const node_names = [];
+			const node_id_mapping = {};
 
 			offset += 2;
 			for (let i=0; i < numMappings; i++) {
-				//const nodeId = buffer.readUInt16BE(offset);
+				const nodeId = buffer.readUInt16BE(offset);
 				offset += 2;
 
 				const nameLen = buffer.readUInt16BE(offset);
@@ -80,14 +80,14 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 				const blockName = buffer.subarray(offset, offset+nameLen).toString();
 				offset += nameLen;
 
-				node_names.push(blockName);
+				node_id_mapping[blockName] = nodeId;
 			}
 
 			resolve({
 				version: version,
 				static_objects_count: static_objects_count,
 				static_objects_version: static_objects_version,
-				node_names: node_names
+				node_id_mapping: node_id_mapping
 			});
 		});
 

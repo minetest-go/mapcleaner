@@ -10,7 +10,9 @@ describe('mapblockparser', function() {
       assert.equal(mapblock.version, 28);
       assert.equal(mapblock.static_objects_count, 1);
       assert.equal(mapblock.static_objects_version, 0);
-      assert.equal(mapblock.node_names.some(name => name == "air"), true);
+      assert.equal(mapblock.node_id_mapping.air >= 0, true);
+      assert.equal(mapblock.node_id_mapping["default:stone"] >= 0, true);
+      assert.equal(mapblock.node_id_mapping["some:stuff"] >= 0, false);
     });
 	});
 });

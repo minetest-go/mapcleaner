@@ -1,0 +1,21 @@
+name: test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: apt
+      run: sudo apt-get install -y nodejs npm
+
+    - name: npm install
+      run: npm i
+
+    - name: npm test
+      run: npm test

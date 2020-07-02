@@ -4,8 +4,8 @@
   "description": "mapcleaner",
   "main": "index.js",
   "scripts": {
-    "jshint_backend": "cd src && jshint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "jshint_backend": "cd src && jshint . && cd ../test/ && jshint .",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "pq": "0.0.3"
   },
   "devDependencies": {
-    "jshint": "^2.11.1"
+    "jshint": "^2.11.1",
+    "mocha": "^8.0.1"
   }
 }

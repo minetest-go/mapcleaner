@@ -1,0 +1,27 @@
+{
+  "name": "mapcleaner",
+  "version": "1.0.0",
+  "description": "mapcleaner",
+  "main": "index.js",
+  "scripts": {
+    "jshint_backend": "cd src && jshint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BuckarooBanzay/mapcleaner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BuckarooBanzay/mapcleaner/issues"
+  },
+  "homepage": "https://github.com/BuckarooBanzay/mapcleaner#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pq": "0.0.3"
+  },
+  "devDependencies": {
+    "jshint": "^2.11.1"
+  }
+}

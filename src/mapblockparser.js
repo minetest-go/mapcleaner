@@ -40,16 +40,11 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 
 	let inflate = zlib.createInflate();
 	inflate.on("data", function(mapdata){
-		console.log("mapdata", mapdata);
-		console.log(inflate.bytesWritten);
-
 		offset += inflate.bytesWritten;
 		const metadata_buffer = buffer.subarray(offset);
 		inflate = zlib.createInflate();
 
 		inflate.on("data", function(metadata){
-			console.log("metadata", metadata);
-			console.log(inflate.bytesWritten);
 			offset += inflate.bytesWritten;
 
 			//static objects version
@@ -62,7 +57,6 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 			for (let i=0; i < static_objects_count; i++) {
 				offset += 13;
 				const dataSize = buffer.readUInt16BE(offset);
-				console.log("dataSize", dataSize);
 				offset += dataSize + 2;
 			}
 
@@ -73,8 +67,6 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 			offset++;
 
 			const numMappings = buffer.readUInt16BE(offset);
-			console.log("numMappings", numMappings);
-
 			const node_names = [];
 
 			offset += 2;
@@ -88,7 +80,6 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 				const blockName = buffer.subarray(offset, offset+nameLen).toString();
 				offset += nameLen;
 
-				console.log("blockName", blockName);
 				node_names.push(blockName);
 			}
 

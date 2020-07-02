@@ -25,7 +25,7 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 	const params_width = buffer.readUInt8(offset+1);
 
 	if (content_width != 2 || params_width != 2){
-		return reject("content/param width mismatch!")
+		return reject("content/param width mismatch!");
 	}
 
 	//mapdata (blocks)
@@ -86,7 +86,7 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 				offset += 2;
 
 				const blockName = buffer.subarray(offset, offset+nameLen).toString();
-				offset += nameLen
+				offset += nameLen;
 
 				console.log("blockName", blockName);
 				node_names.push(blockName);

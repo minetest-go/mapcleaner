@@ -39,12 +39,12 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 	const mapdata_buffer = buffer.subarray(offset);
 
 	let inflate = zlib.createInflate();
-	inflate.on("data", function(mapdata){
+	inflate.on("data", function(/*mapdata*/){
 		offset += inflate.bytesWritten;
 		const metadata_buffer = buffer.subarray(offset);
 		inflate = zlib.createInflate();
 
-		inflate.on("data", function(metadata){
+		inflate.on("data", function(/*metadata*/){
 			offset += inflate.bytesWritten;
 
 			//static objects version

@@ -27,7 +27,3 @@ dofile(MP .. "/delete.lua")
 dofile(MP .. "/chat.lua")
 dofile(MP .. "/globalstep.lua")
 dofile(MP .. "/journal.lua")
-
-if minetest.settings:get_bool("enable_mapcleaner_integration_test") then
-	dofile(MP.."/integration_test.lua")
-end

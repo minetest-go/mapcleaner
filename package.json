@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "jshint_backend": "cd src && jshint . && cd ../test/ && jshint .",
+    "start": "node src/index.js",
     "test": "mocha"
   },
   "repository": {
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/BuckarooBanzay/mapcleaner#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "pg": "^8.2.1",
     "pq": "0.0.3"
   },
   "devDependencies": {

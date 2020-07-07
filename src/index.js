@@ -1,6 +1,7 @@
 
 const app = require("./app");
 const executor = require("./executor");
+const mapblockparser = require("./mapblockparser");
 
 const port = process.env.PORT || 8080;
 
@@ -53,6 +54,13 @@ executor(`
     `, [pos.x,pos.y,pos.z], { single_row: true })
     .then(block => {
       console.log(pos, block);
+      if (block)
+        return mapblockparser.parse(block.data);
+      else
+        return;
+    })
+    .then(mapblock => {
+      console.log(pos, mapblock);
       const done = shift(pos);
 
       if (!done){

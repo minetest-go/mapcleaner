@@ -1,4 +1,5 @@
 const executor = require("./executor");
+const coordinates = require("./coordinates");
 
 function find_bounds(){
   return executor(`
@@ -20,39 +21,48 @@ module.exports = function(){
       .then(blockbounds => {
         console.log("blockbounds", blockbounds);
         bounds = {
-          minx: Math.floor(blockbounds.minx / 16) - 1,
-          miny: Math.floor(blockbounds.miny / 16) - 1,
-          minz: Math.floor(blockbounds.minz / 16) - 1,
-          maxx: Math.floor(blockbounds.maxx / 16) + 1,
-          maxy: Math.floor(blockbounds.maxy / 16) + 1,
-          maxz: Math.floor(blockbounds.maxz / 16) + 1
+          min: coordinates.get_chunkpos_from_mapblock({
+            x: blockbounds.minx,
+            y: blockbounds.miny,
+            z: blockbounds.minz
+          }),
+          max: coordinates.get_chunkpos_from_mapblock({
+            x: blockbounds.maxx,
+            y: blockbounds.maxy,
+            z: blockbounds.maxz
+          })
         };
 
         console.log("chunkbounds", bounds);
 
-        pos.x = bounds.minx;
-        pos.y = bounds.miny;
-        pos.z = bounds.minz;
+        pos.x = bounds.min.x - 1;
+        pos.y = bounds.min.y - 1;
+        pos.z = bounds.min.z - 1;
+
+        bounds.max.x += 2;
+        bounds.max.y += 2;
+        bounds.max.z += 2;
+
         return pos;
       });
     }
     return new Promise(resolve => {
-      if (pos.z >= bounds.maxz){
+      if (pos.z >= bounds.max.z){
         // shift x
         pos.x++;
-        pos.z = bounds.minz;
+        pos.z = bounds.min.z;
       } else {
         // shift z
         pos.z++;
       }
 
-      if (pos.x >= bounds.maxx){
+      if (pos.x >= bounds.max.x){
         // shift y
         pos.y++;
-        pos.x = bounds.minx;
+        pos.x = bounds.min.x;
       }
 
-      if (pos.y > bounds.maxy){
+      if (pos.y > bounds.max.y){
         resolve(null);
       }
 

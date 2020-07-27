@@ -7,12 +7,11 @@ function get_mapblock_from_pos(pos){
 	};
 }
 
-function get_chunkpos_from_pos(pos){
-	const mapblock = get_mapblock_from_pos(pos);
+function get_chunkpos_from_mapblock(pos){
 	const aligned_mapblock = {
-		x: mapblock.x + 2,
-		y: mapblock.y + 2,
-		z: mapblock.z + 2
+		x: pos.x + 2,
+		y: pos.y + 2,
+		z: pos.z + 2
 	};
 
 	return {
@@ -20,6 +19,11 @@ function get_chunkpos_from_pos(pos){
 		y: Math.floor(aligned_mapblock.y / 5),
 		z: Math.floor(aligned_mapblock.z / 5)
 	};
+}
+
+function get_chunkpos_from_pos(pos){
+	const mapblock = get_mapblock_from_pos(pos);
+	return get_chunkpos_from_mapblock(mapblock);
 }
 
 function get_mapblocks_from_chunk(chunkpos){
@@ -62,3 +66,4 @@ module.exports.get_mapblock_from_pos = get_mapblock_from_pos;
 module.exports.get_chunkpos_from_pos = get_chunkpos_from_pos;
 module.exports.get_mapblocks_from_chunk = get_mapblocks_from_chunk;
 module.exports.get_blocks_from_mapblock = get_blocks_from_mapblock;
+module.exports.get_chunkpos_from_mapblock = get_chunkpos_from_mapblock;

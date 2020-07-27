@@ -1,5 +1,6 @@
 const iterator = require("./iterator");
-const checkchunk = require("./checkchunk");
+const checkchunkwithneighbours = require("./checkchunkwithneighbours");
+const removechunk = require("./removechunk");
 
 const it = iterator();
 
@@ -7,10 +8,23 @@ function worker() {
   it()
   .then(pos => {
     if (pos){
-      checkchunk(pos)
+      console.log("worker-chunk", pos);
+      checkchunkwithneighbours(pos)
       .then(result => {
-        //TODO: check if protected/generated
-        setTimeout(worker, 10);
+        console.log("check-chunk", pos, result);
+
+        if (!result.protected && result.generated){
+          //not protected and generated, remove
+          console.log("removing chunk", pos);
+          removechunk(pos)
+          .then(() => {
+            //proceed with next chunk
+            setTimeout(worker, 0);
+          });
+        } else {
+          //proceed with next chunk
+          setTimeout(worker, 0);
+        }
       });
     } else {
       //done

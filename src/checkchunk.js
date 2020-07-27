@@ -1,6 +1,38 @@
 
+const postostring = require("./postostring");
+const coordinates = require("./coordinates");
+const checkmapblock = require("./checkmapblock");
+
+const cache = {};
+
 module.exports = function(pos){
-	return new Promise(() => {
-		
+	const str = postostring(pos);
+
+	if (cache[str]){
+		return Promise.resolve(cache[str]);
+	}
+
+	const mapblocks = coordinates.get_mapblocks_from_chunk(pos);
+
+	const promises = [];
+	for (var x=mapblocks.min.x; x<=mapblocks.max.x; x++){
+		for (var y=mapblocks.min.y; y<=mapblocks.max.y; y++){
+			for (var z=mapblocks.min.z; z<=mapblocks.max.z; z++){
+				const coord = { x:x, y:y, z:z };
+				promises.push(checkmapblock(coord));
+			}
+		}
+	}
+
+	return Promise.all(promises)
+	.then(results => {
+		const result = {
+			protected: results.some(res => res.protected),
+			generated: results.some(res => res.generated)
+		};
+
+		cache[str] = result;
+
+		return result;
 	});
 };

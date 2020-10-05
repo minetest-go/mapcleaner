@@ -1,10 +1,9 @@
 mapcleaner
 -----------------
 
-A mod for [minetest](http://www.minetest.net)
-
-![](https://github.com/BuckarooBanzay/mapcleaner/workflows/luacheck/badge.svg)
-![](https://github.com/BuckarooBanzay/mapcleaner/workflows/integration-test/badge.svg)
+![](https://github.com/BuckarooBanzay/mapcleaner/workflows/docker/badge.svg)
+![](https://github.com/BuckarooBanzay/mapcleaner/workflows/test/badge.svg)
+![](https://github.com/BuckarooBanzay/mapcleaner/workflows/jshint_backend/badge.svg)
 
 # Overview
 
@@ -40,18 +39,6 @@ group:save_in_at_nodedb
 
 * Player distance: 5*80 blocks
 * For a chunk to be removed all surrounding chunks have to be unprotected
-
-# Chatcommands
-
-* **/mapcleaner_status** shows the current status (current position, statistics)
-* **/mapcleaner_max_time [microseconds]** shows or sets the max cpu-time per step
-* **/mapcleaner_step_interval [seconds]** shows or sets the seconds between intervals
-* **/mapcleaner_run [true|false]** show, start or stop the process
-* **/mapcleaner_max_lag [seconds]** sets the max lag value where the mapcleaner stops running
-
-All settings are persisted across restarts
-
-**NOTE**: by default the process is stopped and has to be started initially with **/mapcleaner_run true**
 
 # License
 

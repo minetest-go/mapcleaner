@@ -19,7 +19,7 @@ function worker() {
           removechunk(pos)
           .then(() => {
             //proceed with next chunk
-            setTimeout(worker, 0);
+            setTimeout(worker, 500);
           });
         } else {
           //proceed with next chunk

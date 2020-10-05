@@ -8,6 +8,11 @@ function worker() {
   it()
   .then(pos => {
     if (pos){
+      if (!pos.z){
+        // no data in row, skip
+        setTimeout(worker, 0);
+        return;
+      }
       console.log("worker-chunk", pos);
       checkchunkwithneighbours(pos)
       .then(result => {

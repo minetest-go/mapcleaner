@@ -16,6 +16,9 @@ module.exports.parse = function(filename){
 
   let chunk_count = 0;
   areas.forEach(function(area){
+    if (!area || !area.pos1 || !area.pos2){
+      return;
+    }
     const chunkpos1 = coordinates.get_chunkpos_from_pos(area.pos1);
     const chunkpos2 = coordinates.get_chunkpos_from_pos(area.pos2);
 

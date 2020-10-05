@@ -1,0 +1,23 @@
+name: docker
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: docker publish
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: buckaroobanzay/mapcleaner
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        tag_names: true
+        cache: true

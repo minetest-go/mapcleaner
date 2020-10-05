@@ -22,12 +22,15 @@ services:
 
  mapcleaner:
   build: ..
+  volumes:
+   - "./data/minetest/world/areas.dat:/areas.dat"
   environment:
    PGHOST: postgres
    PGUSER: postgres
    PGDATABASE: postgres
    PGPASSWORD: enter
    PGPORT: 5432
+   AREAS_FILE: /areas.dat
   restart: "no"
 
 volumes:

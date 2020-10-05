@@ -2,6 +2,7 @@
 const postostring = require("./postostring");
 const coordinates = require("./coordinates");
 const checkmapblock = require("./checkmapblock");
+const areas = require("./areas");
 
 const cache = {};
 
@@ -10,6 +11,16 @@ module.exports = function(pos){
 
 	if (cache[str]){
 		return Promise.resolve(cache[str]);
+	}
+
+	if (areas.is_chunk_protected(pos)){
+		const result = {
+			protected: true,
+			generated: true
+		};
+		cache[str] = result;
+
+		return Promise.resolve(result);
 	}
 
 	const mapblocks = coordinates.get_mapblocks_from_chunk(pos);

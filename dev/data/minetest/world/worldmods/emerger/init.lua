@@ -17,7 +17,8 @@ end
 minetest.register_on_mods_loaded(function()
 	minetest.after(1, function()
 		execute_test(function()
-      --TODO
+			-- place bones
+			minetest.set_node({ x=0, y=0, z=0 }, {name="bones:bones"})
 		end)
 	end)
 end)

@@ -1,7 +1,7 @@
 
 local function execute_mapgen(callback)
 	local pos1 = { x=-50, y=-10, z=-50 }
-	local pos2 = { x=50, y=50, z=50 }
+	local pos2 = { x=150, y=50, z=150 }
 	minetest.emerge_area(pos1, pos2, callback)
 end
 
@@ -19,6 +19,7 @@ minetest.register_on_mods_loaded(function()
 		execute_test(function()
 			-- place bones
 			minetest.set_node({ x=0, y=0, z=0 }, {name="bones:bones"})
+			print("Done emerging!")
 		end)
 	end)
 end)

@@ -41,12 +41,22 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 		const mapdata_buffer = buffer.subarray(offset);
 
 		let inflate = zlib.createInflate();
-		inflate.on("data", function(/*mapdata*/){
+		inflate.on("data", function(mapdata){
+			if (mapdata.length != 16384){
+				return reject("mapdata length mismatch!");
+			}
+
 			offset += inflate.bytesWritten;
 			const metadata_buffer = buffer.subarray(offset);
 			inflate = zlib.createInflate();
 
-			inflate.on("data", function(/*metadata*/){
+			let metadata = Buffer.from([]);
+
+			inflate.on("data", function(buf){
+				metadata = Buffer.from([metadata, buf]);
+			});
+
+			inflate.on("end", function(){
 				try {
 					offset += inflate.bytesWritten;
 
@@ -96,6 +106,7 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 					console.error("possible mapblock corruption detected!", e);
 					reject(e);
 				}
+
 			});
 
 			inflate.write(metadata_buffer);

@@ -19,8 +19,6 @@ describe('mapblockparser', function() {
   it("does not crash", function(){
     const data = fs.readFileSync("./test/testdata/pandorabox1.bin");
     return mapblockparser.parse(data)
-    .then(function(mapblock){
-      console.log(mapblock);
-    });
+    .then(function(){});
   });
 });

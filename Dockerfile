@@ -7,7 +7,7 @@ COPY . /data
 RUN cd /data &&\
   npm ci &&\
   npm test &&\
-  npm run jshint_backend
+  npm run jshint
 
 # Stage 2 package
 FROM node:14.12.0-alpine

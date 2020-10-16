@@ -3,7 +3,6 @@ const coordinates = require("./coordinates");
 
 module.exports = function(pos){
 	const mapblocks = coordinates.get_mapblocks_from_chunk(pos);
-	console.log("removechunk", pos, mapblocks);
 
 	return executor(`
 		delete

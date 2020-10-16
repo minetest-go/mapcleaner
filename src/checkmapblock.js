@@ -27,5 +27,9 @@ module.exports = function(pos){
 				generated: false
 			};
 		}
+	})
+	.catch(e => {
+		console.error("mapblock error", pos, e);
+		process.exit();
 	});
 };

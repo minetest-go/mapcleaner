@@ -1,6 +1,7 @@
 const zlib = require("zlib");
 
 module.exports.parse = data => new Promise(function(resolve, reject) {
+
 	try {
 		const buffer = Buffer.from(data);
 
@@ -98,5 +99,6 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 		inflate.write(mapdata_buffer);
 	} catch (e) {
 		console.error("possible mapblock corruption detected!", e);
+		reject(e);
 	}
 });

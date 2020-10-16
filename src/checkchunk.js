@@ -1,5 +1,4 @@
 
-const postostring = require("./postostring");
 const coordinates = require("./coordinates");
 const checkmapblock = require("./checkmapblock");
 const areas = require("./areas");
@@ -7,7 +6,7 @@ const areas = require("./areas");
 const cache = {};
 
 module.exports = function(pos){
-	const str = postostring(pos);
+	const str = `${pos.x}/${pos.y}/${pos.z}`;
 
 	if (cache[str]){
 		return Promise.resolve(cache[str]);

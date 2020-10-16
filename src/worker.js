@@ -5,10 +5,14 @@ const bounds = require("./bounds");
 async function worker() {
 
   const ybounds = await bounds.find_y_bounds();
-  const minychunk = Math.floor((ybounds.miny + 2) / 5);
+  let minychunk = Math.floor((ybounds.miny + 2) / 5);
   const maxychunk = Math.floor((ybounds.maxy + 2) / 5);
   let chunkcount = 0;
   let removecount = 0;
+
+  if (process.env.STARTYCHUNK) {
+    minychunk = +process.env.STARTYCHUNK;
+  }
 
   for (let chunky = minychunk; chunky <= maxychunk; chunky++){
     const miny = (chunky * 5) - 2;

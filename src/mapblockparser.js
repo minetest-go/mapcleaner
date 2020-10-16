@@ -47,50 +47,55 @@ module.exports.parse = data => new Promise(function(resolve, reject) {
 			inflate = zlib.createInflate();
 
 			inflate.on("data", function(/*metadata*/){
-				offset += inflate.bytesWritten;
+				try {
+					offset += inflate.bytesWritten;
 
-				//static objects version
-				const static_objects_version = buffer.readUInt8(offset);
-				offset++;
+					//static objects version
+					const static_objects_version = buffer.readUInt8(offset);
+					offset++;
 
-				const static_objects_count = buffer.readUInt16BE(offset);
-				offset += 2;
-
-				for (let i=0; i < static_objects_count; i++) {
-					offset += 13;
-					const dataSize = buffer.readUInt16BE(offset);
-					offset += dataSize + 2;
-				}
-
-				//timestamp
-				offset += 4;
-
-				//mapping version
-				offset++;
-
-				const numMappings = buffer.readUInt16BE(offset);
-				const node_id_mapping = {};
-
-				offset += 2;
-				for (let i=0; i < numMappings; i++) {
-					const nodeId = buffer.readUInt16BE(offset);
+					const static_objects_count = buffer.readUInt16BE(offset);
 					offset += 2;
 
-					const nameLen = buffer.readUInt16BE(offset);
+					for (let i=0; i < static_objects_count; i++) {
+						offset += 13;
+						const dataSize = buffer.readUInt16BE(offset);
+						offset += dataSize + 2;
+					}
+
+					//timestamp
+					offset += 4;
+
+					//mapping version
+					offset++;
+
+					const numMappings = buffer.readUInt16BE(offset);
+					const node_id_mapping = {};
+
 					offset += 2;
+					for (let i=0; i < numMappings; i++) {
+						const nodeId = buffer.readUInt16BE(offset);
+						offset += 2;
 
-					const blockName = buffer.subarray(offset, offset+nameLen).toString();
-					offset += nameLen;
+						const nameLen = buffer.readUInt16BE(offset);
+						offset += 2;
 
-					node_id_mapping[blockName] = nodeId;
+						const blockName = buffer.subarray(offset, offset+nameLen).toString();
+						offset += nameLen;
+
+						node_id_mapping[blockName] = nodeId;
+					}
+
+					resolve({
+						version: version,
+						static_objects_count: static_objects_count,
+						static_objects_version: static_objects_version,
+						node_id_mapping: node_id_mapping
+					});
+				} catch (e) {
+					console.error("possible mapblock corruption detected!", e);
+					reject(e);
 				}
-
-				resolve({
-					version: version,
-					static_objects_count: static_objects_count,
-					static_objects_version: static_objects_version,
-					node_id_mapping: node_id_mapping
-				});
 			});
 
 			inflate.write(metadata_buffer);

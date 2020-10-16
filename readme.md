@@ -3,7 +3,7 @@ mapcleaner
 
 ![](https://github.com/BuckarooBanzay/mapcleaner/workflows/docker/badge.svg)
 ![](https://github.com/BuckarooBanzay/mapcleaner/workflows/test/badge.svg)
-![](https://github.com/BuckarooBanzay/mapcleaner/workflows/jshint_backend/badge.svg)
+![](https://github.com/BuckarooBanzay/mapcleaner/workflows/jshint/badge.svg)
 
 # Overview
 

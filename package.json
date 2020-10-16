@@ -4,7 +4,7 @@
   "description": "mapcleaner",
   "main": "index.js",
   "scripts": {
-    "jshint_backend": "cd src && jshint . && cd ../test/ && jshint .",
+    "jshint": "cd src && jshint . && cd ../test/ && jshint .",
     "start": "node src/index.js",
     "test": "mocha"
   },

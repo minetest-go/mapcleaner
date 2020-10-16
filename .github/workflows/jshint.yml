@@ -1,4 +1,4 @@
-name: jshint_backend
+name: jshint
 
 on: [push, pull_request]
 
@@ -14,4 +14,4 @@ jobs:
     - name: install
       run: npm i
     - name: jshint
-      run: npm run jshint_backend
+      run: npm run jshint

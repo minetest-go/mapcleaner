@@ -16,6 +16,7 @@ const protected_nodes = [
 	// default
 	"default:chest_protected",
 	"bones:bones",
+	"default:mese_post_light",
 
 	// various
 	"moreblocks:slab_desert_cobble",

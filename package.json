@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/BuckarooBanzay/mapcleaner#readme",
   "dependencies": {
-    "pg": "^8.4.1",
+    "pg": "^8.4.2",
     "pq": "0.0.3"
   },
   "devDependencies": {

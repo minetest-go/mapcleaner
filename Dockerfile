@@ -1,5 +1,5 @@
 # Stage 1 testing
-FROM node:14.13.1-alpine as builder
+FROM node:15.1.0-alpine as builder
 
 COPY . /data
 
@@ -10,7 +10,7 @@ RUN cd /data &&\
   npm run jshint
 
 # Stage 2 package
-FROM node:14.13.1-alpine
+FROM node:15.1.0-alpine
 
 COPY . /data
 

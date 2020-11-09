@@ -1,6 +1,7 @@
 const checkchunkwithneighbours = require("./checkchunkwithneighbours");
 const removechunk = require("./removechunk");
 const bounds = require("./bounds");
+const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function worker() {
 
@@ -47,6 +48,7 @@ async function worker() {
           //not protected and generated, remove
           console.log("removing chunk", chunkpos);
           await removechunk(chunkpos);
+          await snooze(1000);
           removecount++;
         }
 

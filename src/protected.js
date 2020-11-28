@@ -14,7 +14,7 @@ const protected_nodes = [
 	"priv_protector:protector",
 
 	// default
-	"default:chest_protected",
+	"default:chest_locked",
 	"bones:bones",
 	"default:mese_post_light",
 

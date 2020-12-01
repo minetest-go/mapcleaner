@@ -48,7 +48,7 @@ async function worker() {
           //not protected and generated, remove
           console.log("removing chunk", chunkpos);
           await removechunk(chunkpos);
-          await snooze(1000);
+          await snooze(2000);
           removecount++;
         }
 

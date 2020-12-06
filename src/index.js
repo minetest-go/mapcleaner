@@ -1,6 +1,7 @@
 const worker = require("./worker");
 const areas = require("./areas");
 const app = require("./app");
+require("./api");
 
 let area_parse_handler = null;
 

@@ -1,6 +1,7 @@
 const checkchunkwithneighbours = require("./checkchunkwithneighbours");
 const removechunk = require("./removechunk");
 const bounds = require("./bounds");
+const state = require("./state");
 const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function worker() {
@@ -53,6 +54,13 @@ async function worker() {
         }
 
         chunkcount++;
+
+				// set current information in state
+				state.chunkcount = chunkcount;
+				state.removecount = removecount;
+				state.x = chunkpos.x;
+				state.y = chunkpos.y;
+				state.z = chunkpos.z;
       }
 
     }

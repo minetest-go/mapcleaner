@@ -6,15 +6,25 @@ const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function worker() {
 
-  const ybounds = await bounds.find_y_bounds();
-  let minychunk = Math.floor((ybounds.miny + 2) / 5);
-  const maxychunk = Math.floor((ybounds.maxy + 2) / 5);
+
+	let minychunk, maxychunk;
+
+	if (process.env.STARTYCHUNK) {
+		// manual start point
+    minychunk = +process.env.STARTYCHUNK;
+		maxychunk = 400;
+
+  } else {
+		// find lowest chunk position
+		const ybounds = await bounds.find_y_bounds();
+		minychunk = Math.floor((ybounds.miny + 2) / 5);
+		maxychunk = Math.floor((ybounds.maxy + 2) / 5);
+
+	}
+
   let chunkcount = 0;
   let removecount = 0;
 
-  if (process.env.STARTYCHUNK) {
-    minychunk = +process.env.STARTYCHUNK;
-  }
 
   for (let chunky = minychunk; chunky <= maxychunk; chunky++){
     const miny = (chunky * 5) - 2;

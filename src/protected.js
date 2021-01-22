@@ -3,9 +3,16 @@ const protected_nodes = [
 	// default protector
 	"protector:protect",
 	"protector:protect2",
+	"protector:protect_hidden",
 
 	// travelnet
 	"travelnet:travelnet",
+	"travelnet:travelnet_red",
+	"travelnet:travelnet_blue",
+	"travelnet:travelnet_green",
+	"travelnet:travelnet_black",
+	"travelnet:travelnet_white",
+	"travelnet:elevator",
 
 	// xp protector
 	"xp_redo:protector",

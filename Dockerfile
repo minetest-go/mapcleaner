@@ -1,23 +1,15 @@
-# Stage 1 testing
-FROM node:15.3.0-alpine as builder
+FROM golang:1.17.0-alpine as builder
 
-COPY . /data
+RUN apk --no-cache add ca-certificates gcc libc-dev
 
-# build
-RUN cd /data &&\
-  npm ci &&\
-  npm test &&\
-  npm run jshint
+VOLUME /root/go
+COPY ./ /app
+RUN cd /app &&\
+  go test ./... &&\
+  go build
 
-# Stage 2 package
-FROM node:15.3.0-alpine
+FROM alpine:3.14.2
+WORKDIR /app
+COPY --from=builder /app/mapcleaner /bin/mapcleaner
 
-COPY . /data
-
-RUN cd /data && npm ci --only=production
-
-WORKDIR /data
-
-EXPOSE 8080
-
-CMD ["npm", "start"]
+CMD ["/bin/mapcleaner"]

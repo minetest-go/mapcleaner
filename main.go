@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	mapparser.Parse([]byte{})
+	mapparser.Parse([]byte{}, 0, nil)
 	fmt.Println("Starting")
 }

@@ -1,25 +1,27 @@
 package main
 
 import (
-	"errors"
 	"os"
 	"path"
 
 	"github.com/minetest-go/areasparser"
-	"github.com/minetest-go/mapparser"
 	"github.com/minetest-go/mtdb"
 	"github.com/sirupsen/logrus"
 )
 
+var ctx *mtdb.Context
+var wd string
+
 func main() {
-	wd, err := os.Getwd()
+	var err error
+	wd, err = os.Getwd()
 	if err != nil {
 		panic(err)
 	}
 
 	logrus.WithFields(logrus.Fields{"world": wd}).Info("Starting mapcleaner")
 
-	ctx, err := mtdb.New(wd)
+	ctx, err = mtdb.New(wd)
 	if err != nil {
 		panic(err)
 	}
@@ -30,21 +32,12 @@ func main() {
 		logrus.WithFields(logrus.Fields{"filename": areas_file}).Warn("Areas not found")
 	}
 
-	b, err := ctx.Blocks.GetByPos(0, 0, 0)
+	err = LoadState()
 	if err != nil {
 		panic(err)
 	}
 
-	if b == nil {
-		panic(errors.New("no block found"))
-	}
+	Process()
 
-	block, err := mapparser.Parse(b.Data)
-	if err != nil {
-		panic(err)
-	}
-
-	logrus.WithFields(logrus.Fields{
-		"mapping": block.BlockMapping,
-	}).Info("Parsed mapblock")
+	logrus.Info("Finished mapcleaner run")
 }

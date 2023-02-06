@@ -15,6 +15,12 @@ type State struct {
 	RemovedChunks   int `json:"removed_chunks"`
 	RetainedChunks  int `json:"retained_chunks"`
 	ProcessedChunks int `json:"processed_chunks"`
+	FromX           int `json:"from_x"`
+	FromY           int `json:"from_y"`
+	FromZ           int `json:"from_z"`
+	ToX             int `json:"to_x"`
+	ToY             int `json:"to_y"`
+	ToZ             int `json:"to_z"`
 }
 
 const filename = "mapcleaner.json"
@@ -24,6 +30,11 @@ var state = &State{
 	ChunkX: -400,
 	ChunkY: -400,
 	ChunkZ: -400,
+	FromX:  -400,
+	FromZ:  -400,
+	ToX:    400,
+	ToY:    400,
+	ToZ:    400,
 }
 
 func LoadState() error {

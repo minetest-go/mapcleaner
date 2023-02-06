@@ -1,15 +1,14 @@
 package main
 
 import (
-	"github.com/minetest-go/mapparser"
 	"github.com/sirupsen/logrus"
 )
 
 func Process() error {
 	for {
-		if state.ChunkX > 400 {
+		if state.ChunkX > state.ToX {
 			// move to next z stride
-			state.ChunkX = -400
+			state.ChunkX = state.FromX
 			state.ChunkZ++
 
 			logrus.WithFields(logrus.Fields{
@@ -22,17 +21,20 @@ func Process() error {
 				return err
 			}
 		}
-		if state.ChunkZ > 400 {
+		if state.ChunkZ > state.ToZ {
 			// move to next y stride
-			state.ChunkX = -400
-			state.ChunkZ = -400
-			state.ChunkZ++
+			state.ChunkX = state.FromX
+			state.ChunkY++
+			state.ChunkZ = state.FromZ
+
+			// purge cache after each layer
+			ClearProtectionCache()
 
 			logrus.WithFields(logrus.Fields{
 				"chunk_y": state.ChunkY,
 			}).Info("Processing next y-layer")
 		}
-		if state.ChunkY > 400 {
+		if state.ChunkY > state.ToY {
 			// done
 			return nil
 		}
@@ -43,21 +45,35 @@ func Process() error {
 			"chunk_z": state.ChunkZ,
 		}).Debug("Processing")
 
-		b, err := ctx.Blocks.GetByPos(0, 0, 0)
+		emerged, err := IsEmerged(state.ChunkX, state.ChunkY, state.ChunkZ)
 		if err != nil {
 			return err
 		}
-
-		if b != nil {
-			block, err := mapparser.Parse(b.Data)
+		if emerged {
+			protected, err := IsProtectedWithNeighbors(state.ChunkX, state.ChunkY, state.ChunkZ)
 			if err != nil {
 				return err
 			}
 
-			logrus.WithFields(logrus.Fields{
-				"mapping": block.BlockMapping,
-			}).Debug("Parsed mapblock")
+			if !protected {
+				logrus.WithFields(logrus.Fields{
+					"chunk_x": state.ChunkX,
+					"chunk_y": state.ChunkY,
+					"chunk_z": state.ChunkZ,
+				}).Info("Removing chunk")
+
+				err = RemoveChunk(state.ChunkX, state.ChunkY, state.ChunkZ)
+				if err != nil {
+					return err
+				}
+
+				state.RemovedChunks++
+			} else {
+				state.RetainedChunks++
+			}
 		}
+
+		state.ProcessedChunks++
 
 		// shift to next chunk
 		state.ChunkX++

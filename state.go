@@ -16,7 +16,6 @@ type State struct {
 	RetainedChunks  int `json:"retained_chunks"`
 	ProcessedChunks int `json:"processed_chunks"`
 	FromX           int `json:"from_x"`
-	FromY           int `json:"from_y"`
 	FromZ           int `json:"from_z"`
 	ToX             int `json:"to_x"`
 	ToY             int `json:"to_y"`

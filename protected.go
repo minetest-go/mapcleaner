@@ -6,15 +6,38 @@ import (
 	"path"
 	"strings"
 
+	"github.com/minetest-go/areasparser"
 	"github.com/minetest-go/mapparser"
 	"github.com/sirupsen/logrus"
 )
 
 var protected_nodenames = make(map[string]bool)
+var protected_areas = make(map[string]bool)
 var protected_chunks = make(map[string]*bool)
 
 func ClearProtectionCache() {
 	protected_chunks = make(map[string]*bool)
+}
+
+func PopulateAreaProtection(area *areasparser.Area) {
+	logrus.WithFields(logrus.Fields{
+		"pos1":  area.Pos1,
+		"pos2":  area.Pos2,
+		"name":  area.Name,
+		"owner": area.Owner,
+	}).Info("Adding area protection")
+
+	x1, y1, z1 := GetChunkPosFromNode(area.Pos1.X, area.Pos1.Y, area.Pos1.Z)
+	x2, y2, z2 := GetChunkPosFromNode(area.Pos2.X, area.Pos2.Y, area.Pos2.Z)
+
+	for x := x1; x <= x2; x++ {
+		for y := y1; y <= y2; y++ {
+			for z := z1; z <= z2; z++ {
+				key := GetChunkKey(x, y, z)
+				protected_areas[key] = true
+			}
+		}
+	}
 }
 
 func LoadProtectedNodes() error {
@@ -54,6 +77,12 @@ func IsEmerged(chunk_x, chunk_y, chunk_z int) (bool, error) {
 
 func IsProtected(chunk_x, chunk_y, chunk_z int) (bool, error) {
 	key := GetChunkKey(chunk_x, chunk_y, chunk_z)
+
+	// check area protection first
+	if protected_areas[key] {
+		return true, nil
+	}
+
 	p := protected_chunks[key]
 
 	if p == nil {

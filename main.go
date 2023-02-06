@@ -32,12 +32,15 @@ func main() {
 		panic(err)
 	}
 
-	areas_file := path.Join(wd, "areas.json")
-	_, err = areasparser.ParseFile(areas_file)
+	areas_file := path.Join(wd, "areas.dat")
+	areas, err := areasparser.ParseFile(areas_file)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{"filename": areas_file}).Warn("Areas not found")
+	} else {
+		for _, area := range areas {
+			PopulateAreaProtection(area)
+		}
 	}
-	//TODO: area protection
 
 	err = LoadState()
 	if err != nil {

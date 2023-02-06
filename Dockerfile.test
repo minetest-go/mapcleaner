@@ -1,15 +1,16 @@
 # mapcleaner build
-FROM golang:1.19.0 as builder
-COPY ./ /app
+FROM golang:1.19.0-alpine as builder
+RUN apk --no-cache add ca-certificates gcc libc-dev
+COPY ./*.go /app/
+COPY ./go.* /app/
 WORKDIR /app
-RUN go test ./... &&\
-  go build
+RUN go test ./... && CGO_ENABLED=0 go build
 
 # minetest
 FROM registry.gitlab.com/minetest/minetest/server:5.6.1
 
 USER root
-RUN apk add git sqlite3 &&\
+RUN apk add git sqlite jq &&\
     mkdir -p /root/.minetest/worlds/world/worldmods/ &&\
     git clone https://github.com/BuckarooBanzay/mtt /root/.minetest/worlds/world/worldmods/mtt &&\
     git clone https://github.com/minetest-mods/areas /root/.minetest/worlds/world/worldmods/areas

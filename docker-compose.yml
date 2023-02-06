@@ -9,9 +9,5 @@ services:
   working_dir: /root/.minetest/worlds/world
   volumes:
     - "./test/testmod:/root/.minetest/worlds/world/worldmods/testmod/"
-    - "world_data:/root/.minetest/worlds/world"
     - "./test/world.mt:/root/.minetest/worlds/world/world.mt"
     - "./test/minetest.conf:/minetest.conf"
-
-volumes:
-  world_data: {}

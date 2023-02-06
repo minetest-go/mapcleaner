@@ -1,0 +1,16 @@
+version: "3.6"
+
+services:
+ sut:
+  build:
+   context: .
+   dockerfile: ./Dockerfile.test
+  user: root
+  volumes:
+    - "./test/testmod:/root/.minetest/worlds/world/worldmods/testmod/"
+    - "world_data:/root/.minetest/worlds/world"
+    - "./test/world.mt:/root/.minetest/worlds/world/world.mt"
+    - "./test/minetest.conf:/minetest.conf"
+
+volumes:
+  world_data: {}

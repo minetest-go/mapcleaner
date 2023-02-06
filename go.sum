@@ -64,6 +64,8 @@ github.com/mattn/go-isatty v0.0.16 h1:bq3VjFmv/sOjHtdEhmkEV4x1AJtvUvOJ2PFAZ5+peK
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/matttproud/golang_protobuf_extensions v1.0.1 h1:4hp9jkHxhMHkqkrB3Ix0jegS5sx/RkqARlsWZ6pIwiU=
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
+github.com/minetest-go/areasparser v1.0.0 h1:2XFVUwAWRcbkg1OV7qQQHmhx8gEY85crKIxqNxh5Dbo=
+github.com/minetest-go/areasparser v1.0.0/go.mod h1:NvohBk60WBrAbfvgmJccCEblz9I/Ygba4k9V81rwoNc=
 github.com/minetest-go/mapparser v0.0.2 h1:KF/3W0jbuumQf/8gxiBMgGhZd3eeIBHw7cXWiRX1234=
 github.com/minetest-go/mapparser v0.0.2/go.mod h1:ayfvIR4LZibDWe3r3dmnmw0paornH7JZ19n4brp7gy4=
 github.com/minetest-go/mapparser v0.1.8 h1:tmkno1Qi8nIdjQXJLlnq38uVGygZWA8i3ilre/bB9W8=

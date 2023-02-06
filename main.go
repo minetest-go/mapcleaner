@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"os"
+	"path"
 
+	"github.com/minetest-go/areasparser"
 	"github.com/minetest-go/mapparser"
 	"github.com/minetest-go/mtdb"
 	"github.com/sirupsen/logrus"
@@ -20,6 +22,12 @@ func main() {
 	ctx, err := mtdb.New(wd)
 	if err != nil {
 		panic(err)
+	}
+
+	areas_file := path.Join(wd, "areas.json")
+	_, err = areasparser.ParseFile(areas_file)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{"filename": areas_file}).Warn("Areas not found")
 	}
 
 	b, err := ctx.Blocks.GetByPos(0, 0, 0)

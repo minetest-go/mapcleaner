@@ -6,6 +6,7 @@ services:
    context: .
    dockerfile: ./Dockerfile.test
   user: root
+  working_dir: /root/.minetest/worlds/world
   volumes:
     - "./test/testmod:/root/.minetest/worlds/world/worldmods/testmod/"
     - "world_data:/root/.minetest/worlds/world"

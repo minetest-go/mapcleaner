@@ -10,6 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var Version string
 var ctx *mtdb.Context
 var wd string
 
@@ -25,7 +26,14 @@ func main() {
 		panic(fmt.Errorf("can't load 'mapcleaner_protect.txt' because of '%v' (i'm refusing to work without that file!)", err))
 	}
 
-	logrus.WithFields(logrus.Fields{"world": wd}).Info("Starting mapcleaner")
+	if Version == "" {
+		Version = "DEV"
+	}
+
+	logrus.WithFields(logrus.Fields{
+		"world":   wd,
+		"version": Version,
+	}).Info("Starting mapcleaner")
 
 	ctx, err = mtdb.New(wd)
 	if err != nil {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path"
 
@@ -19,6 +20,11 @@ func main() {
 		panic(err)
 	}
 
+	err = LoadProtectedNodes()
+	if err != nil {
+		panic(fmt.Errorf("can't load 'mapcleaner_protect.txt' because of '%v' (i'm refusing to work without that file!)", err))
+	}
+
 	logrus.WithFields(logrus.Fields{"world": wd}).Info("Starting mapcleaner")
 
 	ctx, err = mtdb.New(wd)
@@ -31,13 +37,17 @@ func main() {
 	if err != nil {
 		logrus.WithFields(logrus.Fields{"filename": areas_file}).Warn("Areas not found")
 	}
+	//TODO: area protection
 
 	err = LoadState()
 	if err != nil {
 		panic(err)
 	}
 
-	Process()
+	err = Process()
+	if err != nil {
+		panic(err)
+	}
 
 	logrus.Info("Finished mapcleaner run")
 }

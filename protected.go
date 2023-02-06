@@ -1,6 +1,11 @@
 package main
 
 import (
+	"bufio"
+	"os"
+	"path"
+	"strings"
+
 	"github.com/minetest-go/mapparser"
 	"github.com/sirupsen/logrus"
 )
@@ -10,6 +15,30 @@ var protected_chunks = make(map[string]*bool)
 
 func ClearProtectionCache() {
 	protected_chunks = make(map[string]*bool)
+}
+
+func LoadProtectedNodes() error {
+	file, err := os.Open(path.Join(wd, "mapcleaner_protect.txt"))
+	if err != nil {
+		return err
+	}
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		line = strings.TrimSpace(line)
+		if len(line) == 0 || line[0] == '#' {
+			// comment or empty line
+			continue
+		}
+
+		protected_nodenames[line] = true
+		logrus.WithFields(logrus.Fields{
+			"nodename": line,
+		}).Info("Adding nodename to protected list")
+	}
+
+	return nil
 }
 
 func IsEmerged(chunk_x, chunk_y, chunk_z int) (bool, error) {

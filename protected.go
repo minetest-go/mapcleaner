@@ -13,10 +13,14 @@ import (
 
 var protected_nodenames = make(map[string]bool)
 var protected_areas = make(map[string]bool)
+
+// caches
 var protected_chunks = make(map[string]*bool)
+var emerged_chunks = make(map[string]*bool)
 
 func ClearCache() {
 	protected_chunks = make(map[string]*bool)
+	emerged_chunks = make(map[string]*bool)
 }
 
 func PopulateAreaProtection(area *areasparser.Area) {
@@ -66,11 +70,18 @@ func LoadProtectedNodes() error {
 
 // check all 8 corners of the chunk for existing mapblocks
 func IsEmerged(chunk_x, chunk_y, chunk_z int) (bool, error) {
+	key := GetChunkKey(chunk_x, chunk_y, chunk_z)
+	e := emerged_chunks[key]
+
+	if e != nil {
+		// cached
+		return *e, nil
+	}
+
 	// check if first mapblock exists
 	x1, y1, z1, x2, y2, z2 := GetMapblockBounds(chunk_x, chunk_y, chunk_z)
 
-	//TODO: cache
-
+	emerged := false
 	for _, x := range []int{x1, x2} {
 		for _, y := range []int{y1, y2} {
 			for _, z := range []int{z1, z2} {
@@ -81,16 +92,22 @@ func IsEmerged(chunk_x, chunk_y, chunk_z int) (bool, error) {
 
 				if data != nil {
 					// emerged
-					return true, nil
+					emerged = true
+					break
 				}
 			}
+			if emerged {
+				break
+			}
+		}
+		if emerged {
+			break
 		}
 	}
 
-	// not emerged, mark chunk as unprotected in case of neighbor check
-	protected := false
-	protected_chunks[GetChunkKey(chunk_x, chunk_y, chunk_z)] = &protected
-	return false, nil
+	// cache for next time
+	emerged_chunks[key] = &emerged
+	return emerged, nil
 }
 
 func IsProtected(chunk_x, chunk_y, chunk_z int) (bool, error) {

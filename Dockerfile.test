@@ -1,0 +1,23 @@
+# mapcleaner build
+FROM golang:1.19.0-alpine as builder
+RUN apk --no-cache add ca-certificates gcc libc-dev
+WORKDIR /app
+COPY ./go.* /app/
+RUN go mod download
+COPY ./*.go /app/
+RUN go test ./... && CGO_ENABLED=0 go build
+
+# minetest
+FROM registry.gitlab.com/minetest/minetest/server:5.6.1
+
+USER root
+RUN apk add git sqlite jq &&\
+    mkdir -p /root/.minetest/worlds/world/worldmods/ &&\
+    git clone https://github.com/BuckarooBanzay/mtt /root/.minetest/worlds/world/worldmods/mtt &&\
+    git clone https://github.com/minetest-mods/areas /root/.minetest/worlds/world/worldmods/areas
+
+COPY --from=builder /app/mapcleaner /mapcleaner
+COPY ./test/entrypoint.sh /entrypoint.sh
+COPY ./test/mapcleaner.json /root/.minetest/worlds/world/
+COPY ./test/mapcleaner_protect.txt /root/.minetest/worlds/world/
+ENTRYPOINT /entrypoint.sh

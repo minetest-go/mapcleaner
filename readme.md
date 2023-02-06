@@ -1,9 +1,12 @@
 mapcleaner
 -----------------
 
-![](https://github.com/BuckarooBanzay/mapcleaner/workflows/docker/badge.svg)
+![](https://github.com/BuckarooBanzay/mapcleaner/workflows/build/badge.svg)
 ![](https://github.com/BuckarooBanzay/mapcleaner/workflows/test/badge.svg)
-![](https://github.com/BuckarooBanzay/mapcleaner/workflows/jshint/badge.svg)
+
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/minetest-go/mapcleaner)
+[![Go Report Card](https://goreportcard.com/badge/github.com/minetest-go/mapcleaner)](https://goreportcard.com/report/github.com/minetest-go/mapcleaner)
+[![Coverage Status](https://coveralls.io/repos/github/minetest-go/v/badge.svg)](https://coveralls.io/github/minetest-go/mapcleaner)
 
 # Overview
 
@@ -19,25 +22,10 @@ Runs in the background, checks and removes chunks from bottom to top.
 
 # Protected nodes
 
-List of protected nodes:
-
-```
-protector:protect
-protector:protect2
-travelnet:travelnet
-xp_redo:protector
-priv_protector:protector
-default:chest_protected
-bones:bones
-advtrains:dtrack_st
-advtrains:dtrack_st_45
-advtrains:dtrack_cr_60
-group:save_in_at_nodedb
-```
+TODO
 
 # Safety range
 
-* Player distance: 5*80 blocks
 * For a chunk to be removed all surrounding chunks have to be unprotected
 
 # License

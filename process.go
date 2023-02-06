@@ -28,7 +28,7 @@ func Process() error {
 			state.ChunkZ = state.FromZ
 
 			// purge cache after each layer
-			ClearProtectionCache()
+			ClearCache()
 
 			logrus.WithFields(logrus.Fields{
 				"chunk_y": state.ChunkY,
@@ -36,7 +36,7 @@ func Process() error {
 		}
 		if state.ChunkY > state.ToY {
 			// done
-			return nil
+			return SaveState()
 		}
 
 		logrus.WithFields(logrus.Fields{

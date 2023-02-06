@@ -15,7 +15,7 @@ var protected_nodenames = make(map[string]bool)
 var protected_areas = make(map[string]bool)
 var protected_chunks = make(map[string]*bool)
 
-func ClearProtectionCache() {
+func ClearCache() {
 	protected_chunks = make(map[string]*bool)
 }
 
@@ -64,15 +64,33 @@ func LoadProtectedNodes() error {
 	return nil
 }
 
+// check all 8 corners of the chunk for existing mapblocks
 func IsEmerged(chunk_x, chunk_y, chunk_z int) (bool, error) {
 	// check if first mapblock exists
-	x1, y1, z1, _, _, _ := GetMapblockBounds(chunk_x, chunk_y, chunk_z)
-	data, err := ctx.Blocks.GetByPos(x1, y1, z1)
+	x1, y1, z1, x2, y2, z2 := GetMapblockBounds(chunk_x, chunk_y, chunk_z)
 
-	// mark chunk as unprotected in case of neighbor check
+	//TODO: cache
+
+	for _, x := range []int{x1, x2} {
+		for _, y := range []int{y1, y2} {
+			for _, z := range []int{z1, z2} {
+				data, err := ctx.Blocks.GetByPos(x, y, z)
+				if err != nil {
+					return false, err
+				}
+
+				if data != nil {
+					// emerged
+					return true, nil
+				}
+			}
+		}
+	}
+
+	// not emerged, mark chunk as unprotected in case of neighbor check
 	protected := false
 	protected_chunks[GetChunkKey(chunk_x, chunk_y, chunk_z)] = &protected
-	return data != nil, err
+	return false, nil
 }
 
 func IsProtected(chunk_x, chunk_y, chunk_z int) (bool, error) {

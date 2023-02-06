@@ -59,7 +59,7 @@ func LoadState() error {
 func SaveState() error {
 	file_path := path.Join(wd, filename)
 
-	f, err := os.OpenFile(file_path, os.O_RDWR|os.O_CREATE, 0644)
+	f, err := os.OpenFile(file_path, os.O_RDWR|os.O_TRUNC|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}

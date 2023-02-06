@@ -1,9 +1,10 @@
 # mapcleaner build
 FROM golang:1.19.0-alpine as builder
 RUN apk --no-cache add ca-certificates gcc libc-dev
-COPY ./*.go /app/
-COPY ./go.* /app/
 WORKDIR /app
+COPY ./go.* /app/
+RUN go mod download
+COPY ./*.go /app/
 RUN go test ./... && CGO_ENABLED=0 go build
 
 # minetest

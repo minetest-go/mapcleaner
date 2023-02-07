@@ -2,6 +2,7 @@ mapcleaner
 -----------------
 
 ![](https://github.com/BuckarooBanzay/mapcleaner/workflows/build/badge.svg)
+![](https://github.com/BuckarooBanzay/mapcleaner/workflows/go-test/badge.svg)
 ![](https://github.com/BuckarooBanzay/mapcleaner/workflows/test/badge.svg)
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/minetest-go/mapcleaner)

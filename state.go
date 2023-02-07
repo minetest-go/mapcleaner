@@ -20,6 +20,7 @@ type State struct {
 	ToX             int `json:"to_x"`
 	ToY             int `json:"to_y"`
 	ToZ             int `json:"to_z"`
+	Delay           int `json:"delay"`
 }
 
 const filename = "mapcleaner.json"

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -77,5 +79,6 @@ func Process() error {
 
 		// shift to next chunk
 		state.ChunkX++
+		time.Sleep(time.Millisecond * time.Duration(state.Delay))
 	}
 }

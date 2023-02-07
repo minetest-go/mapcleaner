@@ -62,12 +62,18 @@ An example:
   "from_z": -40,
   "to_x": 40,
   "to_y": 10,
-  "to_z": 40
+  "to_z": 40,
+  "delay": 10
 }
 ```
 
 The above config will process all chunks between `(-40,-10,-40)` and `(40,10,40)` (chunk-positions).
 This translates roughly to `(-3200,-800,-3200)` and `(3200,800,3200)` in node-positions.
+
+* `delay` can be used to slow down the cpu usage of the cleaning (delay is in milliseconds between each new chunk-check)
+* `removed_chunks` total of removed chunks
+* `retained_chunks` chunks with or around protected nodes
+* `processed_chunks` total processed chunks (emerged or not)
 
 **NOTE**: a chunk has 5x5x5 mapblocks and a mapblock 16x16x16 nodes, chunks have a mapblock-offset of `(-2,-2,-2)`
 

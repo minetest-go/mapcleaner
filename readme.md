@@ -27,6 +27,7 @@ Removes unused and unprotected map chunks on an online server
 * Prepare a `mapcleaner_protect.txt` file with protected nodenames and place it in the world folder (see section below)
 * Optionally: configure the `mapcleaner.json` file with start/end positions
 * Start the `mapcleaner` binary in your world directory
+* Wait a few hours or days (depending on world-size, range-limits and cpu/io-speed)
 
 # Configuration files
 

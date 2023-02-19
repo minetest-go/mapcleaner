@@ -31,7 +31,9 @@ func SetLogLevel() {
 	}
 	level, err := logrus.ParseLevel(logLevel)
 	if err != nil {
-		logrus.Warn("Invalid log level provided: %v", logLevel)
+		logrus.
+			WithField("log_level", logLevel).
+			Warn("Invalid log level provided. Using default 'info'")
 	}
 	logrus.SetLevel(level)
 }

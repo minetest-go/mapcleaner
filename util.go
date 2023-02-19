@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 func GetChunkKey(x, y, z int) string {
@@ -19,4 +22,16 @@ func GetChunkPosFromMapblock(x, y, z int) (int, int, int) {
 func GetChunkPosFromNode(x, y, z int) (int, int, int) {
 	m_x, m_y, m_z := GetMapblockPosFromNode(x, y, z)
 	return GetChunkPosFromMapblock(m_x, m_y, m_z)
+}
+
+func SetLogLevel() {
+	logLevel := os.Getenv("MAPCLEANER_LOG_LEVEL")
+	if logLevel == "" {
+		return
+	}
+	level, err := logrus.ParseLevel(logLevel)
+	if err != nil {
+		logrus.Warn("Invalid log level provided: %v", logLevel)
+	}
+	logrus.SetLevel(level)
 }

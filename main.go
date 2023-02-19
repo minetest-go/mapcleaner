@@ -16,15 +16,12 @@ var block_repo block.BlockRepository
 var wd string
 
 func main() {
+	SetLogLevel()
+
 	var err error
 	wd, err = os.Getwd()
 	if err != nil {
 		panic(err)
-	}
-
-	err = LoadProtectedNodes()
-	if err != nil {
-		panic(fmt.Errorf("can't load 'mapcleaner_protect.txt' because of '%v' (i'm refusing to work without that file!)", err))
 	}
 
 	if Version == "" {
@@ -35,6 +32,11 @@ func main() {
 		"world":   wd,
 		"version": Version,
 	}).Info("Starting mapcleaner")
+
+	err = LoadProtectedNodes()
+	if err != nil {
+		panic(fmt.Errorf("can't load 'mapcleaner_protect.txt' because of '%v' (i'm refusing to work without that file!)", err))
+	}
 
 	block_repo, err = mtdb.NewBlockDB(wd)
 	if err != nil {

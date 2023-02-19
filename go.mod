@@ -2,7 +2,12 @@ module mapcleaner
 
 go 1.17
 
-require github.com/minetest-go/mapparser v0.1.8
+require (
+	github.com/minetest-go/areasparser v1.0.0
+	github.com/minetest-go/mapparser v0.1.8
+	github.com/minetest-go/mtdb v1.1.33
+	github.com/sirupsen/logrus v1.9.0
+)
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -15,14 +20,11 @@ require (
 	github.com/lib/pq v1.10.7 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
-	github.com/minetest-go/areasparser v1.0.0 // indirect
-	github.com/minetest-go/mtdb v1.1.29 // indirect
 	github.com/prometheus/client_golang v1.11.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.26.0 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
-	github.com/sirupsen/logrus v1.9.0 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
 	golang.org/x/tools v0.1.10 // indirect

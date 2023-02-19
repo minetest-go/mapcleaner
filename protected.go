@@ -85,7 +85,7 @@ func IsEmerged(chunk_x, chunk_y, chunk_z int) (bool, error) {
 	for _, x := range []int{x1, x2} {
 		for _, y := range []int{y1, y2} {
 			for _, z := range []int{z1, z2} {
-				data, err := ctx.Blocks.GetByPos(x, y, z)
+				data, err := block_repo.GetByPos(x, y, z)
 				if err != nil {
 					return false, err
 				}
@@ -133,7 +133,7 @@ func IsProtected(chunk_x, chunk_y, chunk_z int) (bool, error) {
 						"z": z,
 					}).Debug("Checking mapblock")
 
-					block, err := ctx.Blocks.GetByPos(x, y, z)
+					block, err := block_repo.GetByPos(x, y, z)
 					if err != nil {
 						return false, err
 					}

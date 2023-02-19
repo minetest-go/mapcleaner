@@ -7,11 +7,12 @@ import (
 
 	"github.com/minetest-go/areasparser"
 	"github.com/minetest-go/mtdb"
+	"github.com/minetest-go/mtdb/block"
 	"github.com/sirupsen/logrus"
 )
 
 var Version string
-var ctx *mtdb.Context
+var block_repo block.BlockRepository
 var wd string
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 		"version": Version,
 	}).Info("Starting mapcleaner")
 
-	ctx, err = mtdb.New(wd)
+	block_repo, err = mtdb.NewBlockDB(wd)
 	if err != nil {
 		panic(err)
 	}

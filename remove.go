@@ -14,7 +14,7 @@ func RemoveChunk(chunk_x, chunk_y, chunk_z int) error {
 					"z": z,
 				}).Debug("Removing mapblock")
 
-				err := ctx.Blocks.Delete(x, y, z)
+				err := block_repo.Delete(x, y, z)
 				if err != nil {
 					return err
 				}

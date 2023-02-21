@@ -28,12 +28,12 @@ github.com/minetest-go/areasparser v1.0.0 h1:2XFVUwAWRcbkg1OV7qQQHmhx8gEY85crKIx
 github.com/minetest-go/areasparser v1.0.0/go.mod h1:NvohBk60WBrAbfvgmJccCEblz9I/Ygba4k9V81rwoNc=
 github.com/minetest-go/mapparser v0.1.8 h1:tmkno1Qi8nIdjQXJLlnq38uVGygZWA8i3ilre/bB9W8=
 github.com/minetest-go/mapparser v0.1.8/go.mod h1:TcjEkPY9n0rBM+beSstw+Jje8nGl+LqFhiC00J6ihNw=
+github.com/minetest-go/mtdb v1.1.35 h1:do7bykMYcgYFD+fxJ9WyfOy9ZhpZaJa4zHWiaWJ0sxo=
+github.com/minetest-go/mtdb v1.1.35/go.mod h1:sKO3hTtIVfZSADtPEhPTd5CmQLbKLDZQiS1AvHlchyw=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 h1:OdAsTTz6OkFY5QxjkYwrChwuRruF69c169dPK26NUlk=
 github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=
-github.com/ronoaldo/mtdb v1.1.34-rc1 h1:az/R89XFj28zhbmFUaJ8V2YrIf5EQpurq9SHtixSEQE=
-github.com/ronoaldo/mtdb v1.1.34-rc1/go.mod h1:sKO3hTtIVfZSADtPEhPTd5CmQLbKLDZQiS1AvHlchyw=
 github.com/sirupsen/logrus v1.9.0 h1:trlNQbNUG3OdDrDil03MCb1H2o9nJ1x4/5LYw7byDE0=
 github.com/sirupsen/logrus v1.9.0/go.mod h1:naHLuLoDiP4jHNo9R0sCBMtWGeIprob74mVsIT4qYEQ=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

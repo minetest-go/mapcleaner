@@ -5,11 +5,9 @@ go 1.17
 require (
 	github.com/minetest-go/areasparser v1.0.0
 	github.com/minetest-go/mapparser v0.1.8
-	github.com/minetest-go/mtdb v1.1.33
+	github.com/minetest-go/mtdb v1.1.35
 	github.com/sirupsen/logrus v1.9.0
 )
-
-replace github.com/minetest-go/mtdb v1.1.33 => github.com/ronoaldo/mtdb v1.1.34-rc1
 
 require (
 	github.com/dustin/go-humanize v1.0.0 // indirect

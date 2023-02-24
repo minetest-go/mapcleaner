@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/minetest-go/areasparser v1.0.0
 	github.com/minetest-go/mapparser v0.1.8
-	github.com/minetest-go/mtdb v1.1.35
+	github.com/minetest-go/mtdb v1.1.36
 	github.com/sirupsen/logrus v1.9.0
 )
 

@@ -8,7 +8,7 @@ COPY ./*.go /app/
 RUN go test ./... && CGO_ENABLED=0 go build
 
 # minetest
-FROM registry.gitlab.com/minetest/minetest/server:5.6.1
+FROM registry.gitlab.com/minetest/minetest/server:5.7.0
 
 USER root
 RUN apk add git sqlite jq &&\

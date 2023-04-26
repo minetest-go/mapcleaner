@@ -18,7 +18,7 @@ Removes unused and unprotected map chunks on an online server
 * Removes map chunks based on a nodename whitelist
 * Nodename whitelist defines which nodes should be kept
 * One layer safety-range around protected chunks
-* `areas` mod inetgration
+* `areas` mod integration
 * Can be paused (state and config is maintained in `mapcleaner.json`)
 
 # Installing / Running

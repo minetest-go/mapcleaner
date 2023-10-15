@@ -11,7 +11,7 @@ mapcleaner
 
 # Overview
 
-Removes unused and unprotected map chunks on an online server
+Removes unused and unprotected map chunks on an online server or exports the area-protected chunks to a new map-database
 
 # Features
 
@@ -20,6 +20,7 @@ Removes unused and unprotected map chunks on an online server
 * One layer safety-range around protected chunks
 * `areas` mod integration
 * Can be paused (state and config is maintained in `mapcleaner.json`)
+* Export area-protected chunks to a new `map.sqlite`
 
 # Installing / Running
 
@@ -28,6 +29,17 @@ Removes unused and unprotected map chunks on an online server
 * Optionally: configure the `mapcleaner.json` file with start/end positions
 * Start the `mapcleaner` binary in your world directory
 * Wait a few hours or days (depending on world-size, range-limits and cpu/io-speed)
+
+
+# Operation modes
+
+```sh
+# remove unprotected chunks from the database
+./mapcleaner -mode prune_unproteced
+
+# export protected areas (from the areas mod) to a new map.sqlite in the "area-export" directory
+./mapcleaner -mode export_protected
+```
 
 # Configuration files
 
@@ -77,6 +89,7 @@ This translates roughly to `(-3200,-800,-3200)` and `(3200,800,3200)` in node-po
 * `processed_chunks` total processed chunks (emerged or not)
 
 **NOTE**: a chunk has 5x5x5 mapblocks and a mapblock 16x16x16 nodes, chunks have a mapblock-offset of `(-2,-2,-2)`
+
 
 # Warnings
 

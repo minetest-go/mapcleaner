@@ -1,12 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/sirupsen/logrus"
 )
 
-func Process() error {
+func ProcessRemoveUnprotected() error {
+	logrus.Info("pruning unprotected chunks from the database")
+
+	err := LoadProtectedNodes()
+	if err != nil {
+		return fmt.Errorf("can't load 'mapcleaner_protect.txt' because of '%v' (i'm refusing to work without that file!)", err)
+	}
+
+	err = LoadState()
+	if err != nil {
+		return err
+	}
+
 	for {
 		if state.ChunkX > state.ToX {
 			// move to next z stride

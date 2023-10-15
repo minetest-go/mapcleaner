@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path"
@@ -16,7 +17,21 @@ var block_repo block.BlockRepository
 var wd string
 
 func main() {
-	SetLogLevel()
+
+	help := flag.Bool("help", false, "show help")
+	debug := flag.Bool("debug", false, "set the loglevel to debug")
+	mode := flag.String("mode", "prune_unproteced", "set the working mode [prune_unproteced|export_protected]")
+	flag.Parse()
+
+	if *help {
+		flag.Usage()
+		return
+	}
+
+	if *debug {
+		logrus.SetLevel(logrus.DebugLevel)
+		logrus.Debug("loglevel set to debug")
+	}
 
 	var err error
 	wd, err = os.Getwd()
@@ -33,16 +48,13 @@ func main() {
 		"version": Version,
 	}).Info("Starting mapcleaner")
 
-	err = LoadProtectedNodes()
-	if err != nil {
-		panic(fmt.Errorf("can't load 'mapcleaner_protect.txt' because of '%v' (i'm refusing to work without that file!)", err))
-	}
-
+	// load main block database
 	block_repo, err = mtdb.NewBlockDB(wd)
 	if err != nil {
 		panic(err)
 	}
 
+	// load areas file
 	areas_file := path.Join(wd, "areas.dat")
 	areas, err := areasparser.ParseFile(areas_file)
 	if err != nil {
@@ -53,15 +65,18 @@ func main() {
 		}
 	}
 
-	err = LoadState()
+	// start main process
+	switch *mode {
+	case "prune_unproteced":
+		err = ProcessRemoveUnprotected()
+	case "export_protected":
+		err = ProcessExportProtected(areas)
+	default:
+		panic(fmt.Sprintf("mode not implemented: '%s'", *mode))
+	}
 	if err != nil {
 		panic(err)
 	}
 
-	err = Process()
-	if err != nil {
-		panic(err)
-	}
-
-	logrus.Info("Finished mapcleaner run")
+	logrus.Info("mapcleaner exiting")
 }

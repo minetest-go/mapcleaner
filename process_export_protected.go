@@ -44,6 +44,10 @@ func ProcessExportProtected(areas []*areasparser.Area) error {
 	chunk_count := 0
 
 	for _, area := range areas {
+		if area == nil {
+			continue
+		}
+
 		chunk1_x, chunk1_y, chunk1_z := GetChunkPosFromNode(area.Pos1.X, area.Pos1.Y, area.Pos1.Z)
 		chunk2_x, chunk2_y, chunk2_z := GetChunkPosFromNode(area.Pos2.X, area.Pos2.Y, area.Pos2.Z)
 

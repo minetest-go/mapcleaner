@@ -61,6 +61,9 @@ func main() {
 		logrus.WithFields(logrus.Fields{"filename": areas_file}).Warn("Areas not found")
 	} else {
 		for _, area := range areas {
+			if area == nil {
+				continue
+			}
 			PopulateAreaProtection(area)
 		}
 	}

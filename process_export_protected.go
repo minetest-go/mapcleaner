@@ -14,6 +14,7 @@ func ProcessExportProtected(areas []*areasparser.Area) error {
 	export_dir := path.Join(wd, "area-export")
 	logrus.WithFields(logrus.Fields{
 		"export_dir": export_dir,
+		"area-count": len(areas),
 	}).Info("exporting area-protected chunks")
 
 	if len(areas) == 0 {
@@ -48,8 +49,10 @@ func ProcessExportProtected(areas []*areasparser.Area) error {
 			continue
 		}
 
-		chunk1_x, chunk1_y, chunk1_z := GetChunkPosFromNode(area.Pos1.X, area.Pos1.Y, area.Pos1.Z)
-		chunk2_x, chunk2_y, chunk2_z := GetChunkPosFromNode(area.Pos2.X, area.Pos2.Y, area.Pos2.Z)
+		p1, p2 := SortPos(area.Pos1, area.Pos2)
+
+		chunk1_x, chunk1_y, chunk1_z := GetChunkPosFromNode(p1.X, p1.Y, p1.Z)
+		chunk2_x, chunk2_y, chunk2_z := GetChunkPosFromNode(p2.X, p2.Y, p2.Z)
 
 		for x := chunk1_x; x <= chunk2_x; x++ {
 			for y := chunk1_y; y <= chunk2_y; y++ {

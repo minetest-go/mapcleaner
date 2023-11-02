@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/minetest-go/areasparser"
 )
 
 func GetChunkKey(x, y, z int) string {
@@ -29,4 +31,29 @@ func GetChunkPosFromMapblock(x, y, z int) (int, int, int) {
 func GetChunkPosFromNode(x, y, z int) (int, int, int) {
 	m_x, m_y, m_z := GetMapblockPosFromNode(x, y, z)
 	return GetChunkPosFromMapblock(m_x, m_y, m_z)
+}
+
+func SortPos(p1, p2 *areasparser.GenericPos) (*areasparser.GenericPos, *areasparser.GenericPos) {
+	lo := &areasparser.GenericPos{}
+	hi := &areasparser.GenericPos{}
+
+	if p1.X > p2.X {
+		hi.X = p1.X
+	} else {
+		lo.X = p2.X
+	}
+
+	if p1.Y > p2.Y {
+		hi.Y = p1.Y
+	} else {
+		lo.Y = p2.Y
+	}
+
+	if p1.Z > p2.Z {
+		hi.Z = p1.Z
+	} else {
+		lo.Z = p2.Z
+	}
+
+	return lo, hi
 }

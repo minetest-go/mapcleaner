@@ -5,7 +5,9 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 
+	"github.com/hashicorp/golang-lru/v2/expirable"
 	"github.com/minetest-go/areasparser"
 	"github.com/minetest-go/mapparser"
 	"github.com/sirupsen/logrus"
@@ -15,13 +17,8 @@ var protected_nodenames = make(map[string]bool)
 var protected_areas = make(map[string]bool)
 
 // caches
-var protected_chunks = make(map[string]*bool)
-var emerged_chunks = make(map[string]*bool)
-
-func ClearCache() {
-	protected_chunks = make(map[string]*bool)
-	emerged_chunks = make(map[string]*bool)
-}
+var protected_chunks = expirable.NewLRU[string, bool](1000, nil, time.Minute*10)
+var emerged_chunks = expirable.NewLRU[string, bool](1000, nil, time.Minute*10)
 
 func PopulateAreaProtection(area *areasparser.Area) {
 	logrus.WithFields(logrus.Fields{
@@ -71,11 +68,9 @@ func LoadProtectedNodes() error {
 // check all 8 corners of the chunk for existing mapblocks
 func IsEmerged(chunk_x, chunk_y, chunk_z int) (bool, error) {
 	key := GetChunkKey(chunk_x, chunk_y, chunk_z)
-	e := emerged_chunks[key]
-
-	if e != nil {
-		// cached
-		return *e, nil
+	e, ok := emerged_chunks.Get(key)
+	if ok {
+		return e, nil
 	}
 
 	// check if first mapblock exists
@@ -106,7 +101,7 @@ func IsEmerged(chunk_x, chunk_y, chunk_z int) (bool, error) {
 	}
 
 	// cache for next time
-	emerged_chunks[key] = &emerged
+	emerged_chunks.Add(key, emerged)
 	return emerged, nil
 }
 
@@ -118,48 +113,46 @@ func IsProtected(chunk_x, chunk_y, chunk_z int) (bool, error) {
 		return true, nil
 	}
 
-	p := protected_chunks[key]
+	p, ok := protected_chunks.Get(key)
+	if ok {
+		return p, nil
+	}
 
-	if p == nil {
-		x1, y1, z1, x2, y2, z2 := GetMapblockBoundsFromChunk(chunk_x, chunk_y, chunk_z)
+	x1, y1, z1, x2, y2, z2 := GetMapblockBoundsFromChunk(chunk_x, chunk_y, chunk_z)
 
-		protected := false
-		for x := x1; x <= x2; x++ {
-			for y := y1; y <= y2; y++ {
-				for z := z1; z <= z2; z++ {
-					logrus.WithFields(logrus.Fields{
-						"x": x,
-						"y": y,
-						"z": z,
-					}).Debug("Checking mapblock")
+	protected := false
+	for x := x1; x <= x2; x++ {
+		for y := y1; y <= y2; y++ {
+			for z := z1; z <= z2; z++ {
+				logrus.WithFields(logrus.Fields{
+					"x": x,
+					"y": y,
+					"z": z,
+				}).Debug("Checking mapblock")
 
-					block, err := block_repo.GetByPos(x, y, z)
-					if err != nil {
-						return false, err
-					}
+				block, err := block_repo.GetByPos(x, y, z)
+				if err != nil {
+					return false, err
+				}
 
-					if block == nil {
-						// no block here
-						continue
-					}
+				if block == nil {
+					// no block here
+					continue
+				}
 
-					b, err := mapparser.Parse(block.Data)
-					if err != nil {
-						return false, err
-					}
+				b, err := mapparser.Parse(block.Data)
+				if err != nil {
+					return false, err
+				}
 
-					for _, name := range b.BlockMapping {
-						if protected_nodenames[name] {
-							// protected block here
-							protected = true
-							break
-						}
-					}
-
-					if protected {
+				for _, name := range b.BlockMapping {
+					if protected_nodenames[name] {
+						// protected block here
+						protected = true
 						break
 					}
 				}
+
 				if protected {
 					break
 				}
@@ -168,12 +161,13 @@ func IsProtected(chunk_x, chunk_y, chunk_z int) (bool, error) {
 				break
 			}
 		}
-
-		p = &protected
-		protected_chunks[key] = p
+		if protected {
+			break
+		}
 	}
 
-	return *p, nil
+	protected_chunks.Add(key, protected)
+	return protected, nil
 }
 
 // check chunk with surroundings

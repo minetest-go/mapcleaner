@@ -54,6 +54,19 @@ func ProcessExportProtected(areas []*areasparser.Area) error {
 		chunk1_x, chunk1_y, chunk1_z := GetChunkPosFromNode(p1.X, p1.Y, p1.Z)
 		chunk2_x, chunk2_y, chunk2_z := GetChunkPosFromNode(p2.X, p2.Y, p2.Z)
 
+		logrus.WithFields(logrus.Fields{
+			"chunk1_x":  chunk1_x,
+			"chunk1_y":  chunk1_y,
+			"chunk1_z":  chunk1_z,
+			"chunk2_x":  chunk2_x,
+			"chunk2_y":  chunk2_y,
+			"chunk2_z":  chunk2_z,
+			"p1":        p1,
+			"p2":        p2,
+			"area.Pos1": area.Pos1,
+			"area.Pos2": area.Pos2,
+		}).Info("exported area info")
+
 		for x := chunk1_x; x <= chunk2_x; x++ {
 			for y := chunk1_y; y <= chunk2_y; y++ {
 				for z := chunk1_z; z <= chunk2_z; z++ {

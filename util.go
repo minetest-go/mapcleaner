@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/minetest-go/areasparser"
 )
@@ -10,14 +11,18 @@ func GetChunkKey(x, y, z int) string {
 	return fmt.Sprintf("%d/%d/%d", x, y, z)
 }
 
+func floorOfDivision(n, q int) int {
+	return int(math.Floor(float64(n) / float64(q)))
+}
+
 func GetMapblockPosFromNode(x, y, z int) (int, int, int) {
-	return int(x / 16), int(y / 16), int(z / 16)
+	return floorOfDivision(x, 16), floorOfDivision(y, 16), floorOfDivision(z, 16)
 }
 
 func GetMapblockBoundsFromChunk(x, y, z int) (x1, y1, z1, x2, y2, z2 int) {
-	x1 = (x * 5) - 2
-	y1 = (y * 5) - 2
-	z1 = (z * 5) - 2
+	x1 = (x * 5)
+	y1 = (y * 5)
+	z1 = (z * 5)
 	x2 = x1 + 4
 	y2 = y1 + 4
 	z2 = z1 + 4
@@ -25,7 +30,7 @@ func GetMapblockBoundsFromChunk(x, y, z int) (x1, y1, z1, x2, y2, z2 int) {
 }
 
 func GetChunkPosFromMapblock(x, y, z int) (int, int, int) {
-	return int((x + 2) / 5), int((y + 2) / 5), int((z + 2) / 5)
+	return floorOfDivision((x), 5), floorOfDivision((y), 5), floorOfDivision((z), 5)
 }
 
 func GetChunkPosFromNode(x, y, z int) (int, int, int) {

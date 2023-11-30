@@ -31,7 +31,7 @@ func ExportChunk(src, dst block.BlockRepository, x, y, z int) error {
 				if block == nil {
 					continue
 				}
-				logrus.Debugf("Block %v,%v,%v", block.PosX, block.PosY, block.PosZ)
+				logrus.Debugf("updating block %v,%v,%v on destination", block.PosX, block.PosY, block.PosZ)
 				err = dst.Update(block)
 				if err != nil {
 					return fmt.Errorf("error in dst-mapblock %d/%d/%d: %v", mbx, mby, mbz, err)

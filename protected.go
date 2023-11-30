@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/golang-lru/v2/expirable"
 	"github.com/minetest-go/areasparser"
 	"github.com/minetest-go/mapparser"
+	"github.com/minetest-go/mtdb/block"
 	"github.com/sirupsen/logrus"
 )
 
@@ -186,4 +187,30 @@ func IsProtectedWithNeighbors(chunk_x, chunk_y, chunk_z int) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+// IsBlockProtected checks if the block is protected either by areas mod or by the
+// user provided nodes.
+func IsBlockProtected(b *block.Block) (protected bool, err error) {
+	// Is this block protected by areas mod?
+	key := GetChunkKey(GetChunkPosFromMapblock(b.PosX, b.PosY, b.PosZ))
+	protected = protected_areas[key]
+	if protected {
+		return true, nil
+	}
+
+	// Is this block protected by the user selected nodes?
+	parsedBlock, err := mapparser.Parse(b.Data)
+	if err != nil {
+		return false, err
+	}
+	for _, name := range parsedBlock.BlockMapping {
+		if protected_nodenames[name] {
+			logrus.WithFields(logrus.Fields{"block_mapping": parsedBlock.BlockMapping, "found": name}).Debug("block is protected")
+			// protected block here
+			protected = true
+			break
+		}
+	}
+	return protected, nil
 }

@@ -8,7 +8,6 @@ builds:
       - linux_amd64
       - windows_amd64
       - darwin_arm64
-      - linux_arm_6
     ldflags:
       - -s -w -X main.Version={{.Version}}
 changelog:

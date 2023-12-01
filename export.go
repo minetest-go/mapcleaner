@@ -25,13 +25,13 @@ func ExportChunk(src, dst block.BlockRepository, x, y, z int) error {
 		for mby := y1; mby <= y2; mby++ {
 			for mbz := z1; mbz <= z2; mbz++ {
 				block, err := src.GetByPos(mbx, mby, mbz)
-				logrus.Debugf("Block %v,%v,%v", block.PosX, block.PosY, block.PosZ)
 				if err != nil {
 					return fmt.Errorf("error in src-mapblock %d/%d/%d: %v", mbx, mby, mbz, err)
 				}
 				if block == nil {
 					continue
 				}
+				logrus.Debugf("updating block %v,%v,%v on destination", block.PosX, block.PosY, block.PosZ)
 				err = dst.Update(block)
 				if err != nil {
 					return fmt.Errorf("error in dst-mapblock %d/%d/%d: %v", mbx, mby, mbz, err)

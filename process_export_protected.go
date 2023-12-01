@@ -40,6 +40,7 @@ func ProcessExportProtected(areas []*areasparser.Area) error {
 	if err != nil {
 		return fmt.Errorf("could not create export-db: %v", err)
 	}
+	defer export_db.Close()
 
 	exported_chunks := map[string]bool{}
 	chunk_count := 0
@@ -73,6 +74,7 @@ func ProcessExportProtected(areas []*areasparser.Area) error {
 					// check if already exported
 					key := fmt.Sprintf("%d/%d/%d", x, y, z)
 					if exported_chunks[key] {
+						logrus.WithFields(logrus.Fields{"key": key}).Info("chunk already exported, skipping")
 						continue
 					}
 					// mark as exported

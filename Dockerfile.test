@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./go.* /app/
 RUN go mod download
 COPY ./*.go /app/
-RUN go test ./... && CGO_ENABLED=0 go build
+RUN go test ./... && CGO_ENABLED=1 go build
 
 # minetest
 FROM registry.gitlab.com/minetest/minetest/server:5.6.1

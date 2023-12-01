@@ -34,7 +34,7 @@ jobs:
 
       - name: Tests
         run: |
-          CGO_ENABLED=0 go build .
+          CGO_ENABLED=1 go build .
           go test ./...
 
       - name: Log in to the Container registry
@@ -58,6 +58,6 @@ jobs:
       - name: Build and push latest docker image
         if: success() && github.ref == 'refs/heads/master'
         run: |
-          CGO_ENABLED=0 go build .
+          CGO_ENABLED=1 go build .
           docker build . -t ghcr.io/minetest-go/mapcleaner:latest
           docker push ghcr.io/minetest-go/mapcleaner:latest

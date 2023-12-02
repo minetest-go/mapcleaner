@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"time"
 
 	"github.com/minetest-go/areasparser"
 	"github.com/minetest-go/mtdb"
@@ -140,8 +141,16 @@ func ProccessExportAllProtected() error {
 		return err
 	}
 	defer export_db.Close()
+	D("export_db initialized", f{"export_dir": export_dir})
+
+	// Check source size
+	total_blocks, err := block_repo.Count()
+	if err != nil {
+		return err
+	}
 
 	// Initialize variables
+	D("initializing iterator from source", f{"total_blocks": total_blocks})
 	it, closer, err := block_repo.Iterator(block.AsBlockPos(-33000, -33000, -33000))
 	if err != nil {
 		return err
@@ -152,6 +161,8 @@ func ProccessExportAllProtected() error {
 	exported_chunks := map[string]bool{}
 	chunk_count := 0
 	block_count := 0
+	start := time.Now()
+	D("parsing all blocks", f{})
 	for b := range it {
 		block_count++
 
@@ -181,8 +192,15 @@ func ProccessExportAllProtected() error {
 		}
 
 		// Report progress every 100 blocks
-		if block_count%100 == 0 {
-			I("processing blocks", f{"exported_chunks": chunk_count, "processed_blocks": block_count})
+		if block_count%1000 == 0 {
+			progress := 100 * float64(block_count) / float64(total_blocks)
+			stats := f{
+				"exported_chunks": chunk_count,
+				"proc_blocks":     block_count,
+				"progress":        fmt.Sprintf("%.02f%%", progress),
+				"elapsed":         time.Since(start).String(),
+			}
+			I("processing blocks", stats)
 		}
 	}
 

@@ -22,6 +22,7 @@ func main() {
 	debug := flag.Bool("debug", false, "set the loglevel to debug")
 	mode := flag.String("mode", "prune_unproteced", "set the working mode [prune_unproteced|export_protected]")
 	exportAllProtected := flag.Bool("export-all", false, "when mode=export_protected, parse all blocks to also preserve mapcleaner_protect.txt alongside areas")
+	flag.IntVar(&block.IteratorBatchSize, "batch-size", block.IteratorBatchSize, "iterator batch size")
 	flag.Parse()
 
 	if *help {

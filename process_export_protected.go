@@ -179,7 +179,7 @@ func ProccessExportAllProtected() error {
 			// at the edge of a mapblock/mapchunk.
 			for x := chunkx - 1; x <= chunkx+1; x++ {
 				for y := chunky - 1; y <= chunky+1; y++ {
-					for z := chunkz - 1; x <= chunkz+1; z++ {
+					for z := chunkz - 1; z <= chunkz+1; z++ {
 						key := GetChunkKey(x, y, z)
 						if exported_chunks[key] {
 							D("chunk already exported, skipping", f{"key": key})

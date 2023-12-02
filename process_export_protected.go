@@ -173,32 +173,41 @@ func ProccessExportAllProtected() error {
 		}
 
 		if protected {
-			x, y, z := GetChunkPosFromMapblock(b.PosX, b.PosY, b.PosZ)
-			key := GetChunkKey(x, y, z)
-			if exported_chunks[key] {
-				D("chunk already exported, skipping", f{"key": key})
-				continue
-			}
+			chunkx, chunky, chunkz := GetChunkPosFromMapblock(b.PosX, b.PosY, b.PosZ)
 
-			logrus.WithFields(logrus.Fields{"x": x, "y": y, "z": z}).Info("exporting chunk")
-			err = ExportChunk(block_repo, export_db, x, y, z)
-			if err != nil {
-				return fmt.Errorf("export error in chunk %d/%d/%d: %v", x, y, z, err)
-			}
+			// Export surounding chunks as protected elements can be inside a construction that is
+			// at the edge of a mapblock/mapchunk.
+			for x := chunkx - 1; x <= chunkx+1; x++ {
+				for y := chunky - 1; y <= chunky+1; y++ {
+					for z := chunkz - 1; x <= chunkz+1; z++ {
+						key := GetChunkKey(x, y, z)
+						if exported_chunks[key] {
+							D("chunk already exported, skipping", f{"key": key})
+							continue
+						}
 
-			// mark as exported
-			exported_chunks[key] = true
-			chunk_count++
+						I("exporting chunk", f{"x": x, "y": y, "z": z})
+						err = ExportChunk(block_repo, export_db, x, y, z)
+						if err != nil {
+							return fmt.Errorf("export error in chunk %d/%d/%d: %v", x, y, z, err)
+						}
+
+						// mark as exported
+						exported_chunks[key] = true
+						chunk_count++
+					}
+				}
+			}
 		}
 
 		// Report progress every 100 blocks
 		if block_count%1000 == 0 {
 			progress := 100 * float64(block_count) / float64(total_blocks)
 			stats := f{
-				"exported_chunks": chunk_count,
-				"proc_blocks":     block_count,
-				"progress":        fmt.Sprintf("%.02f%%", progress),
-				"elapsed":         time.Since(start).String(),
+				"expo_chunks": chunk_count,
+				"proc_blocks": block_count,
+				"progress":    fmt.Sprintf("%.02f%%", progress),
+				"elapsed":     time.Since(start).String(),
 			}
 			I("processing blocks", stats)
 		}

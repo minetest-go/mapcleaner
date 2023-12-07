@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/minetest-go/areasparser v1.0.0
 	github.com/minetest-go/mapparser v0.1.8
-	github.com/minetest-go/mtdb v1.1.45
+	github.com/minetest-go/mtdb v1.1.46
 	github.com/sirupsen/logrus v1.9.3
 )
 

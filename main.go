@@ -21,6 +21,8 @@ func main() {
 	help := flag.Bool("help", false, "show help")
 	debug := flag.Bool("debug", false, "set the loglevel to debug")
 	mode := flag.String("mode", "prune_unproteced", "set the working mode [prune_unproteced|export_protected]")
+	exportAllProtected := flag.Bool("export-all", false, "when mode=export_protected, parse all blocks to also preserve mapcleaner_protect.txt alongside areas")
+	flag.IntVar(&block.IteratorBatchSize, "batch-size", block.IteratorBatchSize, "iterator batch size")
 	flag.Parse()
 
 	if *help {
@@ -73,7 +75,11 @@ func main() {
 	case "prune_unproteced":
 		err = ProcessRemoveUnprotected()
 	case "export_protected":
-		err = ProcessExportProtected(areas)
+		if *exportAllProtected {
+			err = ProccessExportAllProtected()
+		} else {
+			err = ProcessExportProtected(areas)
+		}
 	default:
 		panic(fmt.Sprintf("mode not implemented: '%s'", *mode))
 	}

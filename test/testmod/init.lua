@@ -1,6 +1,6 @@
 
 -- emerge all chunks around the two "protected" chunks in (0,0,0) and (1,0,0)
-mtt.emerge_area({x=-100,y=0,z=-100}, {x=200,y=100,z=100})
+mtt.emerge_area({x=-400,y=-400,z=-400}, {x=400,y=400,z=400})
 
 mtt.register("setup", function(callback)
 

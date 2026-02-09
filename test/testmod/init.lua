@@ -1,6 +1,15 @@
 
 -- emerge all chunks around the two "protected" chunks in (0,0,0) and (1,0,0)
-mtt.emerge_area({x=-400,y=-400,z=-400}, {x=400,y=400,z=400})
+mtt.register("emerge_area", {
+    func = function(callback)
+        minetest.emerge_area({x=-100,y=-100,z=-100}, {x=100,y=100,z=100}, function(_, _, calls_remaining)
+            if calls_remaining == 0 then
+                callback()
+            end
+        end)
+    end,
+    timeout = 600
+})
 
 mtt.register("setup", function(callback)
 

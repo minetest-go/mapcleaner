@@ -1,0 +1,3 @@
+[submodule "test/minetest_game"]
+	path = test/minetest_game
+	url = https://github.com/luanti-org/minetest_game

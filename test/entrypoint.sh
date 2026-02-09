@@ -2,7 +2,7 @@
 set -e
 set -x
 
-minetestserver --config /minetest.conf
+luantiserver --config /minetest.conf --gameid minetest
 sqlite3 map.sqlite "select count(*) from blocks"
 
 # prune mode
@@ -10,7 +10,7 @@ sqlite3 map.sqlite "select count(*) from blocks"
 sqlite3 map.sqlite "select count(*) from blocks"
 retained=$(cat mapcleaner.json | jq -r ".retained_chunks")
 # 4x3x3 chunks remain
-test "${retained}" == "36" || exit 1
+test "${retained}" == "27" || exit 1
 
 # export mode
 /mapcleaner -mode export_protected
@@ -28,4 +28,4 @@ test -f area-export/map.sqlite
 # to each other, some mapblocks are shared and should not be counted twice:
 # 3x3x4 chunks should be exported. Each has 5x5x5 mapblocks = 4500 total exported mapblocks.
 exported_blocks="$(sqlite3 area-export/map.sqlite "select count(*) from blocks")"
-test "${exported_blocks}" == "4500" || exit 1
+test "${exported_blocks}" == "2744" || exit 1

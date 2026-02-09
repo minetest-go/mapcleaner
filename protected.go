@@ -18,8 +18,13 @@ var protected_nodenames = make(map[string]bool)
 var protected_areas = make(map[string]bool)
 
 // caches
-var protected_chunks = expirable.NewLRU[string, bool](1000, nil, time.Minute*10)
-var emerged_chunks = expirable.NewLRU[string, bool](1000, nil, time.Minute*10)
+var protected_chunks = expirable.NewLRU[string, bool](500, nil, time.Minute*5)
+var emerged_chunks = expirable.NewLRU[string, bool](500, nil, time.Minute*5)
+
+func PurgeCaches() {
+	protected_chunks.Purge()
+	emerged_chunks.Purge()
+}
 
 func PopulateAreaProtection(area *areasparser.Area) {
 	logrus.WithFields(logrus.Fields{

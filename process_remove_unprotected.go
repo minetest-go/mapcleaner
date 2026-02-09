@@ -42,6 +42,8 @@ func ProcessRemoveUnprotected() error {
 			state.ChunkY++
 			state.ChunkZ = state.FromZ
 
+			PurgeCaches()
+
 			logrus.WithFields(logrus.Fields{
 				"chunk_y": state.ChunkY,
 			}).Info("Processing next y-layer")

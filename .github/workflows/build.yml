@@ -46,7 +46,7 @@ jobs:
 
       # step for tags (v*)
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v6
         if: success() && startsWith(github.ref, 'refs/tags/')
         with:
           version: latest

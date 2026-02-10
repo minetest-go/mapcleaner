@@ -11,10 +11,12 @@ github.com/mattn/go-sqlite3 v1.14.28 h1:ThEiQrnbtumT+QMknw63Befp/ce/nUPgBPMlRFEu
 github.com/mattn/go-sqlite3 v1.14.28/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=
 github.com/minetest-go/areasparser v1.0.5 h1:kyfb7mk4S7Gvx5N42uJK8ze3BAbfj8uyLsv2Tuy43MQ=
 github.com/minetest-go/areasparser v1.0.5/go.mod h1:NvohBk60WBrAbfvgmJccCEblz9I/Ygba4k9V81rwoNc=
-github.com/minetest-go/mapparser v0.1.8 h1:tmkno1Qi8nIdjQXJLlnq38uVGygZWA8i3ilre/bB9W8=
-github.com/minetest-go/mapparser v0.1.8/go.mod h1:TcjEkPY9n0rBM+beSstw+Jje8nGl+LqFhiC00J6ihNw=
+github.com/minetest-go/mapparser v1.0.4 h1:JSO0JHWs6N0TB/C4cVuh58MrpO2tWV+6xdh7FYdl1hk=
+github.com/minetest-go/mapparser v1.0.4/go.mod h1:h0BJu8y5cBLOD+oe9YYyF2nRZdJlQ+cA6F8YmzZpHXM=
 github.com/minetest-go/mtdb v1.1.54 h1:LfhFbzj/ke+q+V8bADvegTKPxIWcCxtXNg/0HEJmam8=
 github.com/minetest-go/mtdb v1.1.54/go.mod h1:nl2yR9coe8wfSQuc+a0xWhp1X5J/nlNvL0qtwwr5m7s=
+github.com/minetest-go/types v1.0.7 h1:McQVnHQysqXegJbHnVl66TOS/172yi5b70sosWRCvuk=
+github.com/minetest-go/types v1.0.7/go.mod h1:QS2q8tKAiuBe2Rin880ARFt9VokYIJNZV4Z4kHAChU0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/sirupsen/logrus v1.9.3 h1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ=

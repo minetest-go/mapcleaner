@@ -10,7 +10,7 @@ import (
 )
 
 func ProcessRemoveUnprotectedBatched() error {
-	logrus.Info("pruning unprotected chunks from the database (batched mode)")
+	logrus.Warn("pruning unprotected chunks from the database (batched mode) [EXPERIMENTAL]")
 
 	err := LoadProtectedNodes()
 	if err != nil {

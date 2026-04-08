@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"path"
 
+	"github.com/minetest-go/mapparser"
 	"github.com/minetest-go/mtdb/block"
 	"github.com/minetest-go/mtdb/worldconfig"
 	"github.com/sirupsen/logrus"
@@ -164,4 +165,73 @@ func LoadYLayer(chunk_y int) (map[string]*block.Block, error) {
 	}).Info("Y-layer block cache loaded")
 
 	return layer, nil
+}
+
+// buildProtectedChunkSet does a single pass over the loaded layer, parsing each
+// mapblock once, and returns a set of chunk keys that contain protected nodes or
+// are covered by areas protection. The result is valid for the lifetime of the
+// current Y-layer and should be rebuilt whenever LoadYLayer is called.
+func buildProtectedChunkSet(layer map[string]*block.Block) (map[string]bool, error) {
+	protected := make(map[string]bool)
+
+	// seed with areas-protected chunks first (no parsing needed)
+	for key, v := range protected_areas {
+		if v {
+			protected[key] = true
+		}
+	}
+
+	for _, mb := range layer {
+		chunk_x, chunk_y, chunk_z := GetChunkPosFromMapblock(mb.PosX, mb.PosY, mb.PosZ)
+		key := GetChunkKey(chunk_x, chunk_y, chunk_z)
+		if protected[key] {
+			// already known protected, skip parsing
+			continue
+		}
+
+		b, err := mapparser.Parse(mb.Data)
+		if err != nil {
+			return nil, err
+		}
+		for _, name := range b.BlockMapping {
+			if protected_nodenames[name] {
+				protected[key] = true
+				break
+			}
+		}
+	}
+
+	return protected, nil
+}
+
+// batchRemoveChunk deletes all 125 mapblocks of a chunk in a single range query.
+func batchRemoveChunk(chunk_x, chunk_y, chunk_z int) error {
+	x1, y1, z1, x2, y2, z2 := GetMapblockBoundsFromChunk(chunk_x, chunk_y, chunk_z)
+
+	logrus.WithFields(logrus.Fields{
+		"chunk_x": chunk_x,
+		"chunk_y": chunk_y,
+		"chunk_z": chunk_z,
+	}).Debug("Bulk removing chunk mapblocks")
+
+	switch batchDBType {
+	case worldconfig.BACKEND_POSTGRES:
+		_, err := batchDB.Exec(
+			`DELETE FROM blocks
+			 WHERE posX >= $1 AND posX <= $2
+			   AND posY >= $3 AND posY <= $4
+			   AND posZ >= $5 AND posZ <= $6`,
+			x1, x2, y1, y2, z1, z2)
+		return err
+	case worldconfig.BACKEND_SQLITE3:
+		_, err := batchDB.Exec(
+			`DELETE FROM blocks
+			 WHERE x >= ? AND x <= ?
+			   AND y >= ? AND y <= ?
+			   AND z >= ? AND z <= ?`,
+			x1, x2, y1, y2, z1, z2)
+		return err
+	default:
+		return fmt.Errorf("unsupported backend '%s'", batchDBType)
+	}
 }

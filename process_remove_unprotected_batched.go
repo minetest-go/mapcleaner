@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/minetest-go/mapparser"
 	"github.com/minetest-go/mtdb/block"
 	"github.com/sirupsen/logrus"
 )
@@ -27,6 +26,11 @@ func ProcessRemoveUnprotectedBatched() error {
 	}
 
 	layer, err := LoadYLayer(state.ChunkY)
+	if err != nil {
+		return err
+	}
+
+	protectedChunks, err := buildProtectedChunkSet(layer)
 	if err != nil {
 		return err
 	}
@@ -58,6 +62,11 @@ func ProcessRemoveUnprotectedBatched() error {
 				return err
 			}
 
+			protectedChunks, err = buildProtectedChunkSet(layer)
+			if err != nil {
+				return err
+			}
+
 			logrus.WithFields(logrus.Fields{
 				"chunk_y": state.ChunkY,
 			}).Info("Processing next y-layer")
@@ -75,10 +84,7 @@ func ProcessRemoveUnprotectedBatched() error {
 
 		emerged := batchIsEmerged(layer, state.ChunkX, state.ChunkY, state.ChunkZ)
 		if emerged {
-			protected, err := batchIsProtectedWithNeighbors(layer, state.ChunkX, state.ChunkY, state.ChunkZ)
-			if err != nil {
-				return err
-			}
+			protected := batchIsProtectedWithNeighbors(protectedChunks, state.ChunkX, state.ChunkY, state.ChunkZ)
 
 			if !protected {
 				logrus.WithFields(logrus.Fields{
@@ -87,13 +93,19 @@ func ProcessRemoveUnprotectedBatched() error {
 					"chunk_z": state.ChunkZ,
 				}).Info("Removing chunk")
 
-				err = RemoveChunk(state.ChunkX, state.ChunkY, state.ChunkZ)
+				err = batchRemoveChunk(state.ChunkX, state.ChunkY, state.ChunkZ)
 				if err != nil {
 					return err
 				}
 
 				state.RemovedChunks++
 			} else {
+				logrus.WithFields(logrus.Fields{
+					"chunk_x": state.ChunkX,
+					"chunk_y": state.ChunkY,
+					"chunk_z": state.ChunkZ,
+				}).Info("Retaining chunk")
+
 				state.RetainedChunks++
 			}
 		}
@@ -129,49 +141,21 @@ func batchIsEmerged(layer map[string]*block.Block, chunk_x, chunk_y, chunk_z int
 	return false
 }
 
-// batchIsProtected checks all 125 mapblocks of a chunk for protected nodes.
-func batchIsProtected(layer map[string]*block.Block, chunk_x, chunk_y, chunk_z int) (bool, error) {
-	if protected_areas[GetChunkKey(chunk_x, chunk_y, chunk_z)] {
-		return true, nil
-	}
-
-	x1, y1, z1, x2, y2, z2 := GetMapblockBoundsFromChunk(chunk_x, chunk_y, chunk_z)
-	for x := x1; x <= x2; x++ {
-		for y := y1; y <= y2; y++ {
-			for z := z1; z <= z2; z++ {
-				mb := batchGetBlock(layer, x, y, z)
-				if mb == nil {
-					continue
-				}
-				b, err := mapparser.Parse(mb.Data)
-				if err != nil {
-					return false, err
-				}
-				for _, name := range b.BlockMapping {
-					if protected_nodenames[name] {
-						return true, nil
-					}
-				}
-			}
-		}
-	}
-	return false, nil
+// batchIsProtected checks if the chunk is in the pre-built protected set.
+func batchIsProtected(protectedChunks map[string]bool, chunk_x, chunk_y, chunk_z int) bool {
+	return protectedChunks[GetChunkKey(chunk_x, chunk_y, chunk_z)]
 }
 
 // batchIsProtectedWithNeighbors checks the chunk and all 26 surrounding chunks.
-func batchIsProtectedWithNeighbors(layer map[string]*block.Block, chunk_x, chunk_y, chunk_z int) (bool, error) {
+func batchIsProtectedWithNeighbors(protectedChunks map[string]bool, chunk_x, chunk_y, chunk_z int) bool {
 	for x := -1; x <= 1; x++ {
 		for y := -1; y <= 1; y++ {
 			for z := -1; z <= 1; z++ {
-				p, err := batchIsProtected(layer, chunk_x+x, chunk_y+y, chunk_z+z)
-				if err != nil {
-					return false, err
-				}
-				if p {
-					return true, nil
+				if batchIsProtected(protectedChunks, chunk_x+x, chunk_y+y, chunk_z+z) {
+					return true
 				}
 			}
 		}
 	}
-	return false, nil
+	return false
 }

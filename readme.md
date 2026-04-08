@@ -21,6 +21,7 @@ Removes unused and unprotected map chunks on an online server or exports the are
 * `areas` mod integration
 * Can be paused (state and config is maintained in `mapcleaner.json`)
 * Export area-protected chunks to a new `map.sqlite`
+* Batched mode: single Y-layer prefetch, single-pass protection scan, bulk range DELETEs, and Z-stride transaction batching for maximum throughput
 
 # Installing / Running
 

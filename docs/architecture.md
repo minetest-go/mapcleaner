@@ -188,7 +188,13 @@ flowchart TD
 
 Same logic as `prune_unprotected` but replaces per-mapblock DB calls with a **single bulk SQL range query per Y-layer**. All mapblocks for `chunk_y ±1` across the full X/Z scan area are fetched once into an in-memory map, then all chunk checks for that Y-layer are served from it.
 
-**DB access pattern:** 1 bulk query per Y-layer (instead of up to 133 queries per chunk).
+After loading each Y-layer, a **single-pass protection scan** (`buildProtectedChunkSet`) parses every mapblock in the layer exactly once and builds a `map[string]bool` of protected chunk keys. The main scan loop then does pure map lookups — no parsing occurs during iteration.
+
+Deletions are batched into a **transaction per Z-stride**: all `batchRemoveChunk` calls within a Z-stride are committed atomically at the stride boundary, reducing fsync overhead significantly on SQLite.
+
+**DB access pattern:** 1 bulk SELECT per Y-layer + 1 range DELETE per removed chunk (grouped in Z-stride transactions), vs up to ~3,500 individual queries per chunk in non-batched mode.
+
+**RAM usage:** ~4 GB RSS typical on large worlds (peak VmHWM ~4.8 GB). Requires at least 6 GB free RAM.
 
 ```mermaid
 flowchart TD
@@ -198,26 +204,34 @@ flowchart TD
     open direct SQL connection"]
     D --> E["LoadYLayer chunk_y
     SELECT all mapblocks for Y±1"]
-    E --> F{ChunkX > ToX?}
-    F -- yes --> G["Advance Z
-    SaveState"]
+    E --> E2["beginBatchTx
+    open write transaction"]
+    E2 --> F{ChunkX > ToX?}
+    F -- yes --> G["commitBatchTx
+    Advance Z
+    SaveState
+    beginBatchTx"]
     G --> F
     F -- no --> H{ChunkZ > ToZ?}
-    H -- yes --> I["Advance Y
-    LoadYLayer new chunk_y"]
+    H -- yes --> I["commitBatchTx
+    Advance Y
+    LoadYLayer new chunk_y
+    buildProtectedChunkSet
+    beginBatchTx"]
     I --> H
     H -- no --> J{ChunkY > ToY?}
-    J -- yes --> K([Done — SaveState])
+    J -- yes --> K(["commitBatchTx
+    Done — SaveState"])
     J -- no --> L["batchIsEmerged
     lookup 8 corners in map"]
     L -- not emerged --> M[Advance ChunkX]
     M --> F
     L -- emerged --> N["batchIsProtectedWithNeighbors
-    lookup 27 chunks x 125 blocks in map"]
+    lookup 27 chunks in protectedChunks map"]
     N -- protected --> O[RetainedChunks++]
     O --> M
-    N -- unprotected --> P["RemoveChunk
-    delete 125 mapblocks via DB"]
+    N -- unprotected --> P["batchRemoveChunk
+    1 range DELETE via batchTx"]
     P --> Q[RemovedChunks++]
     Q --> M
 ```
@@ -347,11 +361,11 @@ flowchart LR
 | [state.go](../state.go) | `State` struct, `LoadState` / `SaveState` (mapcleaner.json) |
 | [util.go](../util.go) | Coordinate conversion helpers (`GetChunkKey`, `GetMapblockBoundsFromChunk`, etc.) |
 | [protected.go](../protected.go) | Protection registry, `IsEmerged`, `IsProtected`, `IsProtectedWithNeighbors`, `IsBlockProtected` |
-| [remove.go](../remove.go) | `RemoveChunk` — deletes all 125 mapblocks of a chunk |
+| [remove.go](../remove.go) | `RemoveChunk` — deletes all 125 mapblocks of a chunk (non-batched mode) |
 | [export.go](../export.go) | `ExportChunk` — copies 125 mapblocks from src to dst repository |
 | [process_remove_unprotected.go](../process_remove_unprotected.go) | `ProcessRemoveUnprotected` — standard per-block scan mode |
 | [process_remove_unprotected_batched.go](../process_remove_unprotected_batched.go) | `ProcessRemoveUnprotectedBatched` — Y-layer batch scan mode |
-| [batch.go](../batch.go) | `InitBatchDB`, `LoadYLayer` — bulk range query infrastructure |
+| [batch.go](../batch.go) | `InitBatchDB`, `LoadYLayer`, `buildProtectedChunkSet`, `batchRemoveChunk`, transaction helpers |
 | [process_export_protected.go](../process_export_protected.go) | `ProcessExportProtected`, `ProccessExportAllProtected` |
 
 ---
@@ -388,16 +402,20 @@ flowchart LR
 | `InitBatchDB()` | Opens a direct SQL connection for range queries; validates SQLite format |
 | `sqliteHasPosColumn(db)` | Detects legacy SQLite single-pos column format |
 | `LoadYLayer(chunk_y)` | Executes one range query to load all mapblocks for chunk_y ±1 into a map |
+| `buildProtectedChunkSet(layer)` | Single pass over the layer — parses each mapblock once, returns `map[string]bool` of protected chunk keys (seeded from `protected_areas`) |
+| `beginBatchTx()` | Begins a write transaction on `batchDB`; stored in `batchTx` |
+| `commitBatchTx()` | Commits and clears `batchTx`; no-op if no transaction is active |
+| `batchRemoveChunk(x, y, z)` | Issues a single range DELETE for all 125 mapblocks of a chunk; uses `batchTx` when active |
 
 ### `process_remove_unprotected_batched.go`
 
 | Function | Description |
 |---|---|
-| `batchBlockKey(x, y, z)` | Same as `GetChunkKey` — mapblock key for the layer map |
+| `batchBlockKey(x, y, z)` | Returns `"x/y/z"` mapblock key for the layer map |
 | `batchGetBlock(layer, x, y, z)` | Looks up a mapblock in the in-memory layer map |
 | `batchIsEmerged(layer, x, y, z)` | Checks 8 corner mapblocks against the layer map (no DB call) |
-| `batchIsProtected(layer, x, y, z)` | Checks 125 mapblocks against the layer map for protected nodes |
-| `batchIsProtectedWithNeighbors(layer, x, y, z)` | Checks the chunk and 26 neighbors using the layer map |
+| `batchIsProtected(protectedChunks, x, y, z)` | Map lookup in the pre-built protected chunk set (no parsing) |
+| `batchIsProtectedWithNeighbors(protectedChunks, x, y, z)` | Checks the chunk and 26 neighbors via map lookups |
 
 ---
 

@@ -25,6 +25,10 @@ func ProcessRemoveUnprotectedBatched() error {
 		return err
 	}
 
+	if err = beginBatchTx(); err != nil {
+		return err
+	}
+
 	layer, err := LoadYLayer(state.ChunkY)
 	if err != nil {
 		return err
@@ -37,6 +41,11 @@ func ProcessRemoveUnprotectedBatched() error {
 
 	for {
 		if state.ChunkX > state.ToX {
+			// commit deletions for this z-stride before saving state
+			if err = commitBatchTx(); err != nil {
+				return err
+			}
+
 			// move to next z stride
 			state.ChunkX = state.FromX
 			state.ChunkZ++
@@ -50,8 +59,17 @@ func ProcessRemoveUnprotectedBatched() error {
 			if err != nil {
 				return err
 			}
+
+			if err = beginBatchTx(); err != nil {
+				return err
+			}
 		}
 		if state.ChunkZ > state.ToZ {
+			// commit before loading the new Y-layer (long I/O operation)
+			if err = commitBatchTx(); err != nil {
+				return err
+			}
+
 			// move to next y stride
 			state.ChunkX = state.FromX
 			state.ChunkY++
@@ -67,12 +85,19 @@ func ProcessRemoveUnprotectedBatched() error {
 				return err
 			}
 
+			if err = beginBatchTx(); err != nil {
+				return err
+			}
+
 			logrus.WithFields(logrus.Fields{
 				"chunk_y": state.ChunkY,
 			}).Info("Processing next y-layer")
 		}
 		if state.ChunkY > state.ToY {
-			// done
+			// commit any remaining deletions then save final state
+			if err = commitBatchTx(); err != nil {
+				return err
+			}
 			return SaveState()
 		}
 

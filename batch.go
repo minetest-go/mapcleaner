@@ -13,6 +13,27 @@ import (
 
 var batchDB *sql.DB
 var batchDBType string
+var batchTx *sql.Tx
+
+// beginBatchTx starts a new write transaction on batchDB.
+func beginBatchTx() error {
+	tx, err := batchDB.Begin()
+	if err != nil {
+		return err
+	}
+	batchTx = tx
+	return nil
+}
+
+// commitBatchTx commits the current transaction and clears it.
+func commitBatchTx() error {
+	if batchTx == nil {
+		return nil
+	}
+	err := batchTx.Commit()
+	batchTx = nil
+	return err
+}
 
 // InitBatchDB opens a direct DB connection used for bulk Y-layer prefetch queries.
 // Must be called before LoadYLayer.
@@ -205,6 +226,7 @@ func buildProtectedChunkSet(layer map[string]*block.Block) (map[string]bool, err
 }
 
 // batchRemoveChunk deletes all 125 mapblocks of a chunk in a single range query.
+// Uses the active batchTx transaction when available.
 func batchRemoveChunk(chunk_x, chunk_y, chunk_z int) error {
 	x1, y1, z1, x2, y2, z2 := GetMapblockBoundsFromChunk(chunk_x, chunk_y, chunk_z)
 
@@ -214,9 +236,16 @@ func batchRemoveChunk(chunk_x, chunk_y, chunk_z int) error {
 		"chunk_z": chunk_z,
 	}).Debug("Bulk removing chunk mapblocks")
 
+	var exec func(query string, args ...interface{}) (sql.Result, error)
+	if batchTx != nil {
+		exec = batchTx.Exec
+	} else {
+		exec = batchDB.Exec
+	}
+
 	switch batchDBType {
 	case worldconfig.BACKEND_POSTGRES:
-		_, err := batchDB.Exec(
+		_, err := exec(
 			`DELETE FROM blocks
 			 WHERE posX >= $1 AND posX <= $2
 			   AND posY >= $3 AND posY <= $4
@@ -224,7 +253,7 @@ func batchRemoveChunk(chunk_x, chunk_y, chunk_z int) error {
 			x1, x2, y1, y2, z1, z2)
 		return err
 	case worldconfig.BACKEND_SQLITE3:
-		_, err := batchDB.Exec(
+		_, err := exec(
 			`DELETE FROM blocks
 			 WHERE x >= ? AND x <= ?
 			   AND y >= ? AND y <= ?

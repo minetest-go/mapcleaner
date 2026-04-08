@@ -241,12 +241,12 @@ flowchart TD
 ```mermaid
 block-beta
   columns 3
-  block:A["chunk_y - 1 (neighbor below)"]:3
-  block:B["chunk_y (current layer)"]:3
-  block:C["chunk_y + 1 (neighbor above)"]:3
-  style A fill:#dde,stroke:#99a
-  style B fill:#bdf,stroke:#48a
-  style C fill:#dde,stroke:#99a
+  A["chunk_y - 1 (neighbor below)"]:3
+  B["chunk_y (current layer)"]:3
+  C["chunk_y + 1 (neighbor above)"]:3
+  style A fill:#6688aa,stroke:#445566,color:#ffffff
+  style B fill:#2255cc,stroke:#113399,color:#ffffff
+  style C fill:#6688aa,stroke:#445566,color:#ffffff
 ```
 
 Each layer is 5 mapblock-rows tall. The cache covers 15 mapblock-rows in Y, and the full configured X/Z scan range plus ±1 chunk borders.

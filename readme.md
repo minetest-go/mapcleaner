@@ -35,7 +35,10 @@ Removes unused and unprotected map chunks on an online server or exports the are
 
 ```sh
 # remove unprotected chunks from the database
-./mapcleaner -mode prune_unproteced
+./mapcleaner -mode prune_unprotected
+
+# remove unprotected chunks (batched/faster, higher RAM usage ~4 GB)
+./mapcleaner -mode prune_unprotected_batched
 
 # export protected areas (from the areas mod) to a new map.sqlite in the "area-export" directory
 ./mapcleaner -mode export_protected
@@ -95,7 +98,7 @@ This translates roughly to `(-3200,-800,-3200)` and `(3200,800,3200)` in node-po
 
 This program removes data from your world, try it out on a backup/throw-away world first!
 
-**`prune_unprotected_batched` mode (experimental):** This mode loads an entire Y-layer of mapblocks into RAM at once. On large worlds this can reach **2–3 GB per Y-layer**. Ensure at least **4–6 GB of free RAM** is available before using this mode — if the system starts swapping, the speed advantage over normal mode will be lost. Use `prune_unprotected` if RAM is limited.
+**`prune_unprotected_batched` mode (experimental):** This mode loads an entire Y-layer of mapblocks into RAM at once. On large worlds this typically reaches **~4 GB RSS** (peak VmHWM ~4.8 GB observed). Ensure at least **6 GB of free RAM** is available before using this mode — if the system starts swapping, the speed advantage over normal mode will be lost. Use `prune_unprotected` if RAM is limited.
 
 # License
 

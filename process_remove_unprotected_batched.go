@@ -75,6 +75,11 @@ func ProcessRemoveUnprotectedBatched() error {
 			state.ChunkY++
 			state.ChunkZ = state.FromZ
 
+			// check done before paying the cost of loading the next layer
+			if state.ChunkY > state.ToY {
+				return SaveState()
+			}
+
 			layer, err = LoadYLayer(state.ChunkY)
 			if err != nil {
 				return err

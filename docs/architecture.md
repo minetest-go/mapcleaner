@@ -403,9 +403,36 @@ flowchart LR
 
 ## Performance Comparison
 
-| Mode | DB queries per chunk | Suitable for |
-|---|---|---|
-| `prune_unprotected` | up to ~133 (`GetByPos` each) | Any backend, low-memory |
-| `prune_unprotected_batched` ⚠️ | ~1 (bulk range query per Y-layer) | PostgreSQL, SQLite (new format) |
+| Mode | DB queries per chunk | RAM usage | Suitable for |
+|---|---|---|---|
+| `prune_unprotected` | up to ~133 (`GetByPos` each) | ~50 MB | Any backend, any RAM |
+| `prune_unprotected_batched` ⚠️ | ~1 (bulk range query per Y-layer) | ~2–3 GB per Y-layer | PostgreSQL, SQLite (new format), ≥4 GB free RAM |
 
-The batched mode trades memory (holding one Y-layer of blocks in RAM) for a dramatic reduction in database round-trips, making it significantly faster on large maps especially with PostgreSQL.
+### Speed Estimate
+
+On a large world (248M chunks, ~1.18M emerged chunks, PostgreSQL):
+
+| Phase | `prune_unprotected` | `prune_unprotected_batched` |
+|---|---|---|
+| Read queries (2 billion → 387) | ~4.5 days | ~30–60 min |
+| Delete writes (~145M mapblocks) | interleaved | ~1–3 hours |
+| **Total** | **~5 days** | **~2–4 hours** |
+
+**Expected speedup: ~30–60×** for read-heavy workloads.
+
+Note: the delete path (`RemoveChunk` doing 125 individual `DELETE` statements per chunk) is not yet batched and becomes the dominant cost in batched mode. Batching deletes is a potential future improvement.
+
+### Memory Usage Detail
+
+Batched mode loads all mapblocks for `chunk_y ±1` (3 chunk-Y layers = 15 mapblock rows) across the full X/Z scan area into a Go map on each Y-layer advance:
+
+| Component | Estimate |
+|---|---|
+| Mapblock data blobs (~2 KB avg compressed) | ~2.3 GB |
+| Go map key strings (`"x/y/z"`) | ~55 MB |
+| Go map bucket overhead | ~170 MB |
+| **Total per Y-layer** | **~2.5 GB** |
+
+This memory is fully released and reloaded on each Y-layer advance (once per 387 iterations for a ±400 world). Ensure at least **4–6 GB of free RAM** is available before using batched mode, otherwise the OS will start swapping and the speed advantage will be lost.
+
+`prune_unprotected` uses only two 500-entry LRU caches (~50 KB each) and is safe to run under any memory constraint.

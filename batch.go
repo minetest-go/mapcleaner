@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"path"
 
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/minetest-go/mapparser"
 	"github.com/minetest-go/mtdb/block"
 	"github.com/minetest-go/mtdb/worldconfig"
@@ -47,11 +49,13 @@ func InitBatchDB() error {
 
 	switch batchDBType {
 	case worldconfig.BACKEND_POSTGRES:
-		batchDB, err = sql.Open("postgres", wc[worldconfig.CONFIG_PSQL_MAP_CONNECTION])
+		connStr := wc[worldconfig.CONFIG_PSQL_MAP_CONNECTION]
+		config, err := pgx.ParseConfig(connStr)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to parse postgres connection string: %w", err)
 		}
-		logrus.Info("Batch DB initialized (PostgreSQL)")
+		batchDB = stdlib.OpenDB(*config)
+		logrus.Info("Batch DB initialized (PostgreSQL/pgx)")
 
 	case worldconfig.BACKEND_SQLITE3:
 		batchDB, err = sql.Open("sqlite3", path.Join(wd, "map.sqlite"))

@@ -8,7 +8,7 @@ COPY ./*.go /app/
 RUN go test ./... && CGO_ENABLED=1 go build
 
 # minetest
-FROM ghcr.io/luanti-org/luanti:5.11.0
+FROM ghcr.io/luanti-org/luanti:5.15.2
 
 USER root
 RUN apk add git sqlite jq &&\

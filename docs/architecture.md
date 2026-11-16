@@ -2,7 +2,7 @@
 
 ## Overview
 
-Mapcleaner is a CLI tool that operates on a Minetest world directory. It scans the map database chunk-by-chunk and either **removes unprotected terrain** to reclaim storage, or **exports protected regions** to a separate SQLite database for backup/migration.
+Mapcleaner is a CLI tool that operates on a Luanti world directory. It scans the map database chunk-by-chunk and either **removes unprotected terrain** to reclaim storage, or **exports protected regions** to a separate SQLite database for backup/migration.
 
 It is designed to be resumable: scan progress is persisted to `mapcleaner.json` after every Z-stride so the process can be safely stopped and restarted.
 
@@ -10,7 +10,7 @@ It is designed to be resumable: scan progress is persisted to `mapcleaner.json` 
 
 ## Coordinate System
 
-Minetest uses a 3-tier coordinate hierarchy:
+Luanti uses a 3-tier coordinate hierarchy:
 
 ```
 Node        — smallest unit (1×1×1 block)
@@ -28,7 +28,7 @@ chunk(x,y,z) → mapblocks [x*5 .. x*5+4] × [y*5 .. y*5+4] × [z*5 .. z*5+4]
 
 ## SQLite Map Database Formats
 
-Minetest has used two different SQLite schemas for `map.sqlite` over its history. Mapcleaner (via the `mtdb` library) handles both, but they have different capabilities.
+Luanti has used two different SQLite schemas for `map.sqlite` over its history. Mapcleaner (via the `mtdb` library) handles both, but they have different capabilities.
 
 ### Old Format — `pos` column (pre-5.12.0)
 
@@ -59,7 +59,7 @@ z = ((pos >> 24) & 0xFFF) - 0x800
 
 ### New Format — `x, y, z` columns (5.12.0+)
 
-Introduced in **Minetest 5.12.0** (released 2024). Coordinates are stored as separate integer columns with a composite primary key:
+Introduced in **Luanti 5.12.0** (released 2024). Coordinates are stored as separate integer columns with a composite primary key:
 
 ```sql
 CREATE TABLE blocks (

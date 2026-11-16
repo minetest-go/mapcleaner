@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/minetest-go/mtdb/block"
+	"github.com/luanti-golang/mtdb/block"
 	"github.com/sirupsen/logrus"
 )
 

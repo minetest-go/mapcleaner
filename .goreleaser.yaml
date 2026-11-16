@@ -19,6 +19,6 @@ changelog:
       - '^test:'
 dockers:
 - image_templates:
-    - "ghcr.io/minetest-go/mapcleaner:{{ .Version }}"
-    - "ghcr.io/minetest-go/mapcleaner:latest"
+    - "ghcr.io/luanti-golang/mapcleaner:{{ .Version }}"
+    - "ghcr.io/luanti-golang/mapcleaner:latest"
   dockerfile: Dockerfile

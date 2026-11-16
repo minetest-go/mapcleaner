@@ -7,9 +7,9 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/stdlib"
-	"github.com/minetest-go/mapparser"
-	"github.com/minetest-go/mtdb/block"
-	"github.com/minetest-go/mtdb/worldconfig"
+	"github.com/luanti-golang/mapparser"
+	"github.com/luanti-golang/mtdb/block"
+	"github.com/luanti-golang/mtdb/worldconfig"
 	"github.com/sirupsen/logrus"
 )
 

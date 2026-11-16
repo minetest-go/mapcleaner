@@ -7,7 +7,7 @@ RUN go mod download
 COPY ./*.go /app/
 RUN go test ./... && CGO_ENABLED=1 go build
 
-# minetest
+# luanti
 FROM ghcr.io/luanti-org/luanti:5.11.0
 
 USER root

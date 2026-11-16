@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/hashicorp/golang-lru/v2/expirable"
-	"github.com/minetest-go/areasparser"
-	"github.com/minetest-go/mapparser"
-	"github.com/minetest-go/mtdb/block"
+	"github.com/luanti-golang/areasparser"
+	"github.com/luanti-golang/mapparser"
+	"github.com/luanti-golang/mtdb/block"
 	"github.com/sirupsen/logrus"
 )
 

@@ -5,8 +5,8 @@ mapcleaner
 ![](https://github.com/BuckarooBanzay/mapcleaner/workflows/go-test/badge.svg)
 ![](https://github.com/BuckarooBanzay/mapcleaner/workflows/test/badge.svg)
 
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/minetest-go/mapcleaner)
-[![Go Report Card](https://goreportcard.com/badge/github.com/minetest-go/mapcleaner)](https://goreportcard.com/report/github.com/minetest-go/mapcleaner)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/luanti-golang/mapcleaner)
+[![Go Report Card](https://goreportcard.com/badge/github.com/luanti-golang/mapcleaner)](https://goreportcard.com/report/github.com/luanti-golang/mapcleaner)
 
 # Overview
 
@@ -24,7 +24,7 @@ Removes unused and unprotected map chunks on an online server or exports the are
 
 # Installing / Running
 
-* [Download](https://github.com/minetest-go/mapcleaner/releases) the latest binary
+* [Download](https://github.com/luanti-golang/mapcleaner/releases) the latest binary
 * Prepare a `mapcleaner_protect.txt` file with protected nodenames and place it in the world folder (see section below)
 * Optionally: configure the `mapcleaner.json` file with start/end positions
 * Start the `mapcleaner` binary in your world directory

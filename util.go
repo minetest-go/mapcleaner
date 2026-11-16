@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/minetest-go/areasparser"
+	"github.com/luanti-golang/areasparser"
 )
 
 func GetChunkKey(x, y, z int) string {

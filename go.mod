@@ -9,7 +9,7 @@ require (
 	github.com/minetest-go/areasparser v1.0.5
 	github.com/minetest-go/mapparser v0.1.8
 	github.com/minetest-go/mtdb v1.1.54
-	github.com/sirupsen/logrus v1.9.4
+	github.com/sirupsen/logrus v1.10.2
 )
 
 require (

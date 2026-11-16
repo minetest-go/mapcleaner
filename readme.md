@@ -7,7 +7,6 @@ mapcleaner
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/minetest-go/mapcleaner)
 [![Go Report Card](https://goreportcard.com/badge/github.com/minetest-go/mapcleaner)](https://goreportcard.com/report/github.com/minetest-go/mapcleaner)
-[![Coverage Status](https://coveralls.io/repos/github/minetest-go/v/badge.svg)](https://coveralls.io/github/minetest-go/mapcleaner)
 
 # Overview
 

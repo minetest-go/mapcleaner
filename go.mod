@@ -1,3 +1,4 @@
+// Deprecated: this repository moved to github.com/luanti-golang/mapcleaner
 module mapcleaner
 
 go 1.25.0

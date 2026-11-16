@@ -8,13 +8,13 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
         submodules: recursive
 
     - name: Install Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v6
       with:
         go-version: 1.22.x
 
@@ -22,6 +22,6 @@ jobs:
       run: |
         go test ./... -coverprofile=profile.cov
 
-    - uses: shogo82148/actions-goveralls@v1.6.0
+    - uses: shogo82148/actions-goveralls@v1.11.0
       with:
         path-to-profile: profile.cov

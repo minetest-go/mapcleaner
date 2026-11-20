@@ -6,7 +6,7 @@ require (
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/jackc/pgx/v5 v5.9.1
 	github.com/luanti-golang/areasparser v1.0.7
-	github.com/luanti-golang/mapparser v1.0.6
+	github.com/luanti-golang/mapparser v1.1.0
 	github.com/luanti-golang/mtdb v1.1.57
 	github.com/sirupsen/logrus v1.10.2
 )
